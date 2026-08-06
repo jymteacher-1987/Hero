@@ -534,14 +534,20 @@ const TEXT_MODELS = [
   {id:'__custom__',              name:'직접 입력…',                            note:''}
 ];
 
+/* ★ 예전에 Seedream·FLUX·GPT Image 가 전부 "모델을 찾을 수 없습니다" 로 죽은 진짜 이유.
+   이름 문제가 아니었다. OpenRouter 가 2026-06 에 그림 전용 API(/api/v1/images)를 따로 내면서
+   "새 그림 모델은 전용 API 에만 올린다" 고 공지했다. 앱은 계속 chat/completions 로 부르고 있었고,
+   그쪽에 남아 있는 옛 모델(Nano Banana 2·Pro)만 되고 나머지는 전부 404 였다.
+   askImage 를 전용 API 로 바꿨으니 이제 아래 것들이 다 열린다.
+
+   앞의 둘은 교실에서 그림이 나온 것이 확인된 모델이다. 안 되면 여기로 돌아오면 된다.
+   맨 아래 두 개는 전용 API 로 바꾼 뒤 새로 넣은 것이라 아직 교실에서 안 돌려 봤다. */
 const IMAGE_MODELS = [
-  {id:'google/gemini-3.1-flash-image-preview', name:'Nano Banana 2 — 화질 1위 · 가성비 (기본)', note:'장당 약 95원'},
-  {id:'google/gemini-3-pro-image-preview',     name:'Nano Banana Pro — 얼굴 유지 1위',         note:'장당 약 190원'},
-  {id:'bytedance-seed/seedream-4.5',           name:'Seedream 4.5 — 인물 디테일 보존이 강함', note:''},
-  {id:'black-forest-labs/flux.2-max',          name:'FLUX.2 Max — 질감·조명 최상위',          note:''},
-  {id:'black-forest-labs/flux.2-pro',          name:'FLUX.2 Pro — 사실적이고 조금 저렴',      note:''},
-  {id:'google/gemini-2.5-flash-image',         name:'Nano Banana 1 — 가장 저렴한 예비용',     note:''},
-  {id:'__custom__',                            name:'직접 입력…',                            note:''}
+  {id:'google/gemini-3.1-flash-image', name:'Nano Banana 2 — 화질 1위 · 가성비 (기본)', note:'장당 약 95원'},
+  {id:'google/gemini-3-pro-image',     name:'Nano Banana Pro — 얼굴 유지 1위',          note:'장당 약 190원'},
+  {id:'openai/gpt-image-2',            name:'GPT Image 2 — 글자를 정확히 그림',         note:'장당 약 190원'},
+  {id:'bytedance-seed/seedream-4.5',   name:'Seedream 4.5 — 인물 디테일 보존이 강함',   note:'장당 약 60원'},
+  {id:'__custom__',                    name:'직접 입력…',                              note:''}
 ];
 
 /* ar = 생성 비율, w/h = 최종 합성 캔버스 픽셀 */
@@ -1920,7 +1926,7 @@ const state = {
   page:'intro',
   key:savedKey,
   textModel:'openai/gpt-5.6-luna',
-  imageModel:'google/gemini-3.1-flash-image-preview',
+  imageModel:'google/gemini-3.1-flash-image',
   format:'selphy-post',
   level:'',
   photo:'',
@@ -2001,7 +2007,7 @@ function viewIntro(){
         <div class="field">
           <label>그림을 그리는 모델</label>
           <select id="imageModel">${modelOptions(IMAGE_MODELS, state.imageModel)}</select>
-          <input id="imageCustom" class="${knownImage?'hidden':''}" style="margin-top:8px" placeholder="예: google/gemini-3.1-flash-image-preview" value="${knownImage?'':esc(state.imageModel)}">
+          <input id="imageCustom" class="${knownImage?'hidden':''}" style="margin-top:8px" placeholder="예: google/gemini-3.1-flash-image" value="${knownImage?'':esc(state.imageModel)}">
           <div class="hint">찍은 사진을 참조해 히어로 사진을 만듭니다. 기본은 가성비가 좋은 <b>Nano Banana 2</b>(생성 화질 1위)입니다.
             <b style="color:var(--key)">얼굴이 자꾸 다른 사람으로 나온다면 여기를 <b>Nano Banana Pro</b>로 바꾸세요.</b>
             얼굴 유지력이 가장 좋은 모델입니다. 프롬프트로 할 수 있는 것은 이미 다 하고 있어서, 여기서 더 올리려면 모델을 바꾸는 것이 가장 확실합니다.
@@ -4914,18 +4920,24 @@ NOT IN IT: text, logos or watermarks; floating icons, holograms or formulas; glo
    ══════════════════════════════════════════════════════════════ */
 
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
+/* ★ 그림은 이 전용 주소로 부른다. chat/completions 가 아니다.
+   OpenRouter 가 2026-06 에 그림 전용 API 를 따로 냈고, 공지에 이렇게 적었다 —
+   "새로 추가되는 그림 모델은 전용 Image API 에만 올라간다."
+   그래서 chat/completions 로는 옛날 모델 몇 개(Nano Banana 2·Pro)만 되고
+   Seedream·FLUX·GPT Image 는 전부 404 가 났던 것이다. 이름 문제가 아니었다. */
+const OR_IMG_URL = 'https://openrouter.ai/api/v1/images';
 const OR_HEAD = () => ({
   'Authorization':`Bearer ${state.key}`,
   'Content-Type':'application/json',
   'X-Title':'PHASE Science Hero Lab'
 });
 
-async function orFetch(payload, timeoutMs){
+async function orFetch(payload, timeoutMs, url){
   const ac = new AbortController();
   const timer = setTimeout(()=>ac.abort(), timeoutMs);
   let res;
   try{
-    res = await fetch(OR_URL, {method:'POST', headers:OR_HEAD(), body:JSON.stringify(payload), signal:ac.signal});
+    res = await fetch(url || OR_URL, {method:'POST', headers:OR_HEAD(), body:JSON.stringify(payload), signal:ac.signal});
   }catch(err){
     if(err.name === 'AbortError') throw new Error('시간이 초과됐습니다. 인터넷 연결과 OpenRouter 상태를 확인해 주세요.');
     throw new Error('요청을 보내지 못했습니다: ' + err.message);
@@ -4933,11 +4945,21 @@ async function orFetch(payload, timeoutMs){
 
   const data = await res.json().catch(()=>({}));
   if(!res.ok){
-    if(res.status === 401) throw new Error('API 키가 올바르지 않습니다. 키를 다시 확인해 주세요.');
-    if(res.status === 402) throw new Error('OpenRouter 잔액이 부족합니다. 크레딧을 충전해 주세요.');
-    if(res.status === 404) throw new Error(`모델을 찾을 수 없습니다: ${payload.model}`);
-    if(res.status === 429) throw new Error('요청이 너무 잦습니다. 잠시 뒤 다시 시도해 주세요.');
-    throw new Error(data?.error?.message || `요청 실패 (${res.status})`);
+    /* ★ OpenRouter 가 보내 준 설명을 절대 버리지 않는다.
+       예전에는 404 를 무조건 "모델을 찾을 수 없습니다" 로 바꿔 버렸는데,
+       404 는 '요청한 modalities·파라미터를 지원하는 제공자가 없다' 일 때도 나온다.
+       그래서 이름이 멀쩡한 모델이 이름 틀린 것처럼 보였고, 원인을 찾는 데 한참 걸렸다.
+       무슨 일이 났는지는 이 detail 에 적혀 있으므로 화면에 같이 띄운다. */
+    const detail = data?.error?.message ? ` — ${data.error.message}` : '';
+    let msg;
+    if(res.status === 401)      msg = `API 키가 올바르지 않습니다. 키를 다시 확인해 주세요.${detail}`;
+    else if(res.status === 402) msg = `OpenRouter 잔액이 부족합니다. 크레딧을 충전해 주세요.${detail}`;
+    else if(res.status === 404) msg = `이 모델로는 요청을 처리할 수 없습니다: ${payload.model}${detail}`;
+    else if(res.status === 429) msg = `요청이 너무 잦습니다. 잠시 뒤 다시 시도해 주세요.${detail}`;
+    else msg = data?.error?.message || `요청 실패 (${res.status})`;
+    const e = new Error(msg);
+    e.status = res.status;          // 호출한 쪽이 404 인지 보고 다시 시도할 수 있게 한다
+    throw e;
   }
   return data;
 }
@@ -5359,22 +5381,56 @@ async function askImage(prompt){
     content.push({ type:'image_url', image_url:{ url: state.photo } });
     if(state.photoFace) content.push({ type:'image_url', image_url:{ url: state.photoFace } });
   }
-  const payload = {
-    model: state.imageModel,
-    messages: [{ role:'user', content }],
-    modalities: ['image','text'],
-    image_config: isGemini ? { aspect_ratio:f.ar, image_size:'2K' } : { aspect_ratio:f.ar }
-  };
+  /* 전용 Image API 는 참조 사진을 messages 가 아니라 input_references 로 받는다.
+     받는 개수는 모델마다 다르다 — Nano Banana 2 는 14장, GPT Image 2 는 16장까지. 우리는 2장만 쓴다. */
+  const refs = content.filter(c => c.type === 'image_url');
+  const base = { model: state.imageModel, prompt };
+  if(refs.length) base.input_references = refs;
 
-  const data = await orFetch(payload, 240000);
-  const msg = data?.choices?.[0]?.message;
-  let url = msg?.images?.[0]?.image_url?.url || msg?.images?.[0]?.url || '';
-  if(!url && Array.isArray(msg?.content)){
-    const img = msg.content.find(p => p?.type==='image_url' || p?.type==='output_image');
-    url = img?.image_url?.url || img?.url || '';
+  /* 모델마다 받아 주는 파라미터가 다르다.
+     Nano Banana 2 는 resolution(512·1K·2K·4K)을 받지만 GPT Image 2 는 아예 안 받고 quality 를 받는다.
+     안 받는 걸 보내면 400 이 난다. 그래서 많이 얹은 것부터 시도하고 거절당하면 하나씩 덜어낸다.
+     비율(2:3)은 두 모델 다 받는다. 실패한 생성은 요금이 붙지 않으므로 이렇게 해도 손해가 없다. */
+  const ladder = [
+    { ...base, aspect_ratio:f.ar, resolution:'2K' },   // Gemini 계열
+    { ...base, aspect_ratio:f.ar, quality:'high' },    // GPT Image 계열
+    { ...base, aspect_ratio:f.ar },
+    base
+  ];
+
+  let lastErr;
+  for(const p of ladder){
+    try{
+      const d = await orFetch(p, 240000, OR_IMG_URL);
+      const it = d?.data?.[0];
+      if(it?.b64_json) return `data:${it.media_type || 'image/png'};base64,${it.b64_json}`;
+      lastErr = new Error('이미지가 오지 않았습니다.');
+    }catch(err){
+      lastErr = err;
+      /* 키가 틀렸거나 잔액이 없으면 몇 번을 더 해도 똑같다. 바로 멈춘다. */
+      if(err.status === 401 || err.status === 402) throw err;
+    }
   }
-  if(!url) throw new Error('이미지가 오지 않았습니다. 그림 모델을 Nano Banana 2로 바꿔 보세요.');
-  return url;
+
+  /* 여기까지 왔으면 전용 API 가 이 모델을 안 받는다는 뜻이다.
+     예전 방식(chat/completions)으로 한 번 더 해 본다 — Nano Banana 2·Pro 는 이쪽으로도 된다. */
+  try{
+    const d = await orFetch({
+      model: state.imageModel,
+      messages: [{ role:'user', content }],
+      modalities: ['image','text'],
+      ...(isGemini ? { image_config:{ aspect_ratio:f.ar, image_size:'2K' } } : {})
+    }, 240000);
+    const msg = d?.choices?.[0]?.message;
+    let url = msg?.images?.[0]?.image_url?.url || msg?.images?.[0]?.url || '';
+    if(!url && Array.isArray(msg?.content)){
+      const img = msg.content.find(p => p?.type==='image_url' || p?.type==='output_image');
+      url = img?.image_url?.url || img?.url || '';
+    }
+    if(url) return url;
+  }catch(err){ lastErr = err; }
+
+  throw new Error(`그림을 받지 못했습니다 — ${lastErr?.message || '알 수 없는 오류'}`);
 }
 
 /* ══════════════════════════════════════════════════════════════
