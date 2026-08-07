@@ -539,6 +539,10 @@ h3{font-size:19px;margin:0 0 10px;letter-spacing:-.02em}
 const TEXT_MODELS = [
   {id:'openai/gpt-5.6-luna',     name:'GPT-5.6 Luna',     note:'4원',  effort:'high'},
   {id:'openai/gpt-5.6-luna-pro', name:'GPT-5.6 Luna Pro', note:'40원', effort:'high'},
+  /* Terra 는 OpenAI 3단계(Sol > Terra > Luna) 중 가운데다. 단가는 Luna 의 10배.
+     설명이 '코딩·추론·에이전트용' 이라 이 앱이 시키는 한국어 글짓기와는 결이 다르지만,
+     같은 회사 상위 등급이라 비교용으로 넣어 둔다. 2026-08 현재 50% 할인 중. */
+  {id:'openai/gpt-5.6-terra',    name:'GPT-5.6 Terra',    note:'19원', effort:'high'},
   {id:'google/gemini-3.6-flash', name:'Gemini 3.6 Flash', note:'25원', effort:'high'},
   {id:'anthropic/claude-sonnet-5', name:'Claude Sonnet 5', note:'33원', effort:'high'},
   {id:'anthropic/claude-opus-5', name:'Claude Opus 5',    note:'83원', effort:'high'},
@@ -2033,6 +2037,7 @@ function viewIntro(){
             기본은 가성비가 좋은 <b>Luna</b>입니다. 잘 안 나온 학생만 위 등급으로 다시 뽑으면 됩니다.<br>
             · <b>GPT-5.6 Luna</b> — 가성비 (기본)<br>
             · <b>GPT-5.6 Luna Pro</b> — 같은 모델을 사고력만 올린 것<br>
+            · <b>GPT-5.6 Terra</b> — OpenAI 중간 등급, 추론이 강함<br>
             · <b>Gemini 3.6 Flash</b> — 빠르고 저렴, 다른 회사라 장애 때 대비용<br>
             · <b>Claude Sonnet 5</b> — 한국어 문장이 자연스러움<br>
             · <b>Claude Opus 5</b> — 묘사가 가장 풍부</div>
