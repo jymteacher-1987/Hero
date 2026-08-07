@@ -536,7 +536,6 @@ h3{font-size:19px;margin:0 0 10px;letter-spacing:-.02em}
    출력 토큰이 늘어 표시값보다 더 나올 수 있다.
    ★ 넣기 전 확인할 것: input_modalities 에 image 가 있어야 한다(학생 사진을 읽어야 한다).
      effort:'high' 를 붙이려면 supported_parameters 에 reasoning_effort 가 있어야 한다. */
-const TEXT_MODELS = [
 /* ★ 기본은 Luna 다. 텍스트 모델이 하는 일은 '무엇을 그릴지 설계해서 넘기는 것' 인데,
    이 앱은 프롬프트에 규칙을 이미 촘촘하게 박아 두었다. 모델이 스스로 생각해 낼 여지가 적으니
    비싼 모델을 써도 결과가 그만큼 좋아지지 않는다. 그림 값(장당 190원)에 비하면 여기는 어차피 잔돈이다.
@@ -585,15 +584,16 @@ const TEXT_MODELS = [
    그래서 남은 지렛대는 모델뿐이고, 얼굴 유지력이 가장 좋은 것을 기본으로 놓는 게 맞다.
    장당 95원 차이는 30명 한 반에 2,850원이다. 다시 찍고 다시 뽑는 수고보다 싸다.
 
-   GPT 계열은 목록에 남겨 두되 기본으로 쓰지 마라. OpenRouter 공지대로 이 둘은
-   LLM 을 한 번 거쳐 그림을 만들어서 (1) 느리고 (2) 그 과정에서 참조 사진이 흐려져
-   얼굴이 덜 닮는다. 교실에서 실제로 그렇게 나왔다. */
+   ★ GPT 그림 모델은 전부 뺐다. 다시 넣지 마라. 교실에서 직접 써 보고 내린 결론이다.
+     · openai/gpt-image-1, gpt-image-2 — output 이 image 뿐이라 이 앱에서는 애초에 호출이 안 된다
+     · openai/gpt-5.4-image-2, gpt-5-image — 호출은 되지만 쓸 수 없다.
+       OpenRouter 공지대로 이 둘은 LLM 을 한 번 거쳐 그림을 만든다. 그래서 (1) 눈에 띄게 느리고
+       (2) 그 과정에서 참조 사진이 흐려져 얼굴이 덜 닮는다. 수업에서는 둘 다 치명적이다.
+     같은 이유로 Seedream·FLUX 도 뺐다. 남은 셋은 전부 Gemini 계열이다. */
 const IMAGE_MODELS = [
   {id:'google/gemini-3-pro-image',          name:'Nano Banana Pro',    note:'190원'},
   {id:'google/gemini-3.1-flash-image',      name:'Nano Banana 2',      note:'95원'},
   {id:'google/gemini-3.1-flash-lite-image', name:'Nano Banana 2 Lite', note:'48원'},
-  {id:'openai/gpt-5.4-image-2',             name:'GPT-5.4 Image 2',    note:'50원'},
-  {id:'openai/gpt-5-image',                 name:'GPT-5 Image',        note:'65원'},
   {id:'__custom__',                         name:'직접 입력…',          note:''}
 ];
 
@@ -2070,9 +2070,7 @@ function viewIntro(){
             프롬프트로 할 수 있는 것은 이미 다 하고 있어서, 여기서 더 올리려면 모델을 바꾸는 수밖에 없습니다.<br>
             · <b>Nano Banana Pro</b> — 얼굴 유지력 1위 <b>(기본 · 권장)</b><br>
             · <b>Nano Banana 2</b> — 절반 값, 화질은 좋으나 얼굴이 흔들릴 수 있음<br>
-            · <b>Nano Banana 2 Lite</b> — 가장 싸고 빠름, 연습용<br>
-            · <b>GPT-5.4 Image 2 / GPT-5 Image</b> — <b>느립니다.</b> 그림을 LLM으로 한 번 거쳐 만들어서
-            시간이 오래 걸리고 얼굴도 덜 닮습니다. 비교해 보고 싶을 때만 쓰세요</div>
+            · <b>Nano Banana 2 Lite</b> — 가장 싸고 빠름, 연습용</div>
         </div>
       </div>
 
