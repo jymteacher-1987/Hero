@@ -541,9 +541,12 @@ h3{font-size:19px;margin:0 0 10px;letter-spacing:-.02em}
    비싼 모델을 써도 결과가 그만큼 좋아지지 않는다. 그림 값(장당 190원)에 비하면 여기는 어차피 잔돈이다.
    돈을 더 쓸 데가 있다면 텍스트가 아니라 그림 쪽이다.
    아래는 싼 순이 아니라 '이 일에 얼마나 맞는가' 순으로 놓았다. */
+/* ★ 값은 '한 번 호출' 기준이다. 학생 1명당 텍스트 모델은 3번 불린다
+   (설계 → 지시서 압축 → 한 번 더 조이기). 그래서 실제 지출은 표시값의 3배쯤이다.
+   그림은 1번뿐이지만 한 번이 비싸다. 총액은 대략 (표시값 × 3) + 그림값 이다. */
 const TEXT_MODELS = [
-  {id:'anthropic/claude-sonnet-5', name:'Claude Sonnet 5',  note:'33원', effort:'high'},
   {id:'openai/gpt-5.6-luna',       name:'GPT-5.6 Luna',     note:'4원',  effort:'high'},
+  {id:'anthropic/claude-sonnet-5', name:'Claude Sonnet 5',  note:'33원', effort:'high'},
   {id:'google/gemini-3.6-flash',   name:'Gemini 3.6 Flash', note:'25원', effort:'high'},
   /* Terra 는 OpenAI 3단계(Sol > Terra > Luna) 중 가운데다. 단가는 Luna 의 10배.
      설명이 '코딩·추론·에이전트용' 이라 이 앱이 시키는 한국어 글짓기와는 결이 다르다.
@@ -591,8 +594,8 @@ const TEXT_MODELS = [
        (2) 그 과정에서 참조 사진이 흐려져 얼굴이 덜 닮는다. 수업에서는 둘 다 치명적이다.
      같은 이유로 Seedream·FLUX 도 뺐다. 남은 셋은 전부 Gemini 계열이다. */
 const IMAGE_MODELS = [
-  {id:'google/gemini-3-pro-image',          name:'Nano Banana Pro',    note:'190원'},
   {id:'google/gemini-3.1-flash-image',      name:'Nano Banana 2',      note:'95원'},
+  {id:'google/gemini-3-pro-image',          name:'Nano Banana Pro',    note:'190원'},
   {id:'google/gemini-3.1-flash-lite-image', name:'Nano Banana 2 Lite', note:'48원'},
   {id:'__custom__',                         name:'직접 입력…',          note:''}
 ];
@@ -1975,8 +1978,8 @@ const savedKey = (()=>{ try{ return sessionStorage.getItem('or_key')||'' }catch{
 const state = {
   page:'intro',
   key:savedKey,
-  textModel:'anthropic/claude-sonnet-5',
-  imageModel:'google/gemini-3-pro-image',
+  textModel:'openai/gpt-5.6-luna',
+  imageModel:'google/gemini-3.1-flash-image',
   format:'selphy-post',
   level:'',
   photo:'',
@@ -2053,9 +2056,9 @@ function viewIntro(){
           <input id="textCustom" class="${knownText?'hidden':''}" style="margin-top:8px" placeholder="예: openai/gpt-5.6-terra-pro" value="${knownText?'':esc(state.textModel)}">
           <div class="hint">사진을 보고 히어로 이름과 연출을 설계합니다. 목록의 모델은 모두 <b>사고력을 최대(high)로</b> 올려 호출합니다.
             기본은 가성비가 좋은 <b>Luna</b>입니다. 잘 안 나온 학생만 위 등급으로 다시 뽑으면 됩니다.<br>
-            · <b>GPT-5.6 Luna</b> — <b>(기본 · 권장)</b> 20배 비싼 모델과 견줘도 결과 차이가 크지 않습니다<br>
+            · <b>GPT-5.6 Luna</b> — <b>(기본)</b> 가장 싸고 빠릅니다. 부스처럼 많이 돌릴 때 이걸로 씁니다<br>
+            · <b>Claude Sonnet 5</b> — 한국어 문장이 가장 자연스러움. 이름·설명이 어색하면 여기로<br>
             · <b>Gemini 3.6 Flash</b> — 다른 회사라 OpenAI 장애 때 대비용<br>
-            · <b>Claude Sonnet 5</b> — 한국어 문장이 가장 자연스러움<br>
             · <b>GPT-5.6 Terra</b> — OpenAI 중간 등급, 추론이 강함<br>
             · <b>GPT-5.6 Luna Pro</b> — Luna를 사고력만 올린 것<br>
             · <b>Claude Opus 5</b> — 묘사가 가장 풍부, 가장 비쌈</div>
@@ -2065,11 +2068,10 @@ function viewIntro(){
           <select id="imageModel">${modelOptions(IMAGE_MODELS, state.imageModel)}</select>
           <input id="imageCustom" class="${knownImage?'hidden':''}" style="margin-top:8px" placeholder="예: google/gemini-3.1-flash-image" value="${knownImage?'':esc(state.imageModel)}">
           <div class="hint">찍은 사진을 참조해 히어로 사진을 만듭니다.
-            <b style="color:var(--key)">기본값 Nano Banana Pro를 그대로 쓰시길 권합니다.</b>
-            이 수업에서 가장 흔한 실패가 "얼굴이 딴사람"인데, 그걸 가장 잘 막아 주는 모델입니다.
+            <b style="color:var(--key)">얼굴이 자꾸 딴사람으로 나오면 Nano Banana Pro로 올리세요.</b>
             프롬프트로 할 수 있는 것은 이미 다 하고 있어서, 여기서 더 올리려면 모델을 바꾸는 수밖에 없습니다.<br>
-            · <b>Nano Banana Pro</b> — 얼굴 유지력 1위 <b>(기본 · 권장)</b><br>
-            · <b>Nano Banana 2</b> — 절반 값, 화질은 좋으나 얼굴이 흔들릴 수 있음<br>
+            · <b>Nano Banana 2</b> — 화질 좋고 빠름 <b>(기본)</b><br>
+            · <b>Nano Banana Pro</b> — 얼굴 유지력 1위, 값은 두 배이고 조금 느림<br>
             · <b>Nano Banana 2 Lite</b> — 가장 싸고 빠름, 연습용</div>
         </div>
       </div>
