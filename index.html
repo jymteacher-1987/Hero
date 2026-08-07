@@ -914,25 +914,30 @@ function qrSize(f){
    실제 센티미터를 숫자로 줘야 크기가 맞는다.
    ────────────────────────────────────────────────────────────── */
 const HEIGHT_CM = {                      // 만 나이 → 신장(cm) 중앙값
-  boy:  {5:110.3, 6:115.9, 7:122.1, 8:127.9, 9:133.4, 10:138.8, 11:144.7,
+  boy:  {3:96.5, 4:103.1, 5:110.3, 6:115.9, 7:122.1, 8:127.9, 9:133.4, 10:138.8, 11:144.7,
          12:151.4, 13:158.6, 14:165.0, 15:169.2, 16:171.4, 17:172.6, 18:173.3},
-  girl: {5:109.4, 6:114.7, 7:120.8, 8:126.7, 9:132.6, 10:139.1, 11:145.8,
+  girl: {3:95.4, 4:101.9, 5:109.4, 6:114.7, 7:120.8, 8:126.7, 9:132.6, 10:139.1, 11:145.8,
          12:151.7, 13:155.9, 14:157.9, 15:158.9, 16:159.5, 17:160.0, 18:160.6}
 };
 const ADULT_CM = {boy:173.5, girl:160.5};
 /* 두신비 — 나이가 한눈에 읽히는 건 키가 아니라 머리와 몸의 비율이다.
    실측 두장(頭長)으로 계산한 값이라 만화적으로 부풀린 숫자가 아니다. */
-const HEADS_BY_AGE = {5:6.0, 6:6.2, 7:6.3, 8:6.4, 9:6.6, 10:6.7, 11:6.8,
+/* ★ 2026-08 수정 — 어린 나이 값이 너무 컸다. 만 5세를 6.0등신으로 잡고 있었는데
+   실제로는 5.5등신쯤이다. 0.4등신 차이가 그림에서는 '어른 같다' 로 나타난다.
+   유아 구간을 실제 계측값에 맞춰 낮추고 3·4세를 추가했다. 다시 올리지 마라. */
+const HEADS_BY_AGE = {3:5.0, 4:5.3, 5:5.6, 6:5.9, 7:6.1, 8:6.3, 9:6.4, 10:6.6, 11:6.7,
                       12:6.9, 13:7.1, 14:7.2, 15:7.3, 16:7.4, 17:7.4, 18:7.5};
 const ADULT_HEADS = 7.5;
 
 /* 세는 나이. 안 적었으면 학년으로 대신한다 (초등 12살 · 중등 15살) */
 function ageKorean(){
   const n = parseInt(state.age, 10);
-  if(Number.isFinite(n) && n >= 5 && n <= 99) return n;
+  /* 하한을 4로 내렸다. 예전에는 5 미만이면 조용히 버려져서 학년 기본값(12살)로
+     빠졌고, 4살이라고 적은 학생이 145cm 로 그려졌다. */
+  if(Number.isFinite(n) && n >= 4 && n <= 99) return n;
   return state.level === 'elementary' ? 12 : 15;
 }
-const ageIntl  = () => Math.max(4, ageKorean() - 1);      // 만 나이
+const ageIntl  = () => Math.max(3, ageKorean() - 1);      // 만 나이
 const isAdult  = () => ageIntl() >= 19;
 
 /* 학교 단계 이름 — 화면에 무엇으로 그려지는지 알려 줄 때 쓴다 */
@@ -953,7 +958,7 @@ function ageStage(){
 /* 이 학생이 몇 cm 로, 몇 등신으로 그려져야 하는가 */
 function ageSpec(){
   const m = ageIntl(), st = ageStage(), adult = isAdult();
-  const pick = g => adult ? ADULT_CM[g] : (HEIGHT_CM[g][Math.min(18, Math.max(5, m))] || ADULT_CM[g]);
+  const pick = g => adult ? ADULT_CM[g] : (HEIGHT_CM[g][Math.min(18, Math.max(3, m))] || ADULT_CM[g]);
   const b = pick('boy'), g2 = pick('girl');
   let cm, cmKo;
   if(state.gender === 'boy'){       cm = Math.round(b);  cmKo = `약 ${Math.round(b)}cm`; }
@@ -961,7 +966,7 @@ function ageSpec(){
   else {                            cm = Math.round((b+g2)/2);
                                     const lo = Math.round(Math.min(b,g2)), hi = Math.round(Math.max(b,g2));
                                     cmKo = lo === hi ? `약 ${lo}cm` : `약 ${lo}~${hi}cm`; }
-  const heads = adult ? ADULT_HEADS : (HEADS_BY_AGE[Math.min(18, Math.max(5, m))] || ADULT_HEADS);
+  const heads = adult ? ADULT_HEADS : (HEADS_BY_AGE[Math.min(18, Math.max(3, m))] || ADULT_HEADS);
   /* 다리 길이 — 어른처럼 보이느냐를 가르는 가장 강한 단서다.
      등신수만 적어 주면 그림 모델이 머리만 키우고 다리는 어른 길이로 그려 버린다.
      바닥에서 고관절까지가 전신에서 차지하는 비율은 아이가 어른보다 뚜렷하게 작다
@@ -2487,7 +2492,7 @@ function viewIdentity(){
 
       <div class="field">
         <label>나이 <span style="color:var(--dim);font-weight:600">— 우리가 흔히 말하는 나이 그대로 (13살 = 초등 6학년)</span></label>
-        <input id="age" type="number" inputmode="numeric" min="5" max="99" placeholder="예: 13" value="${esc(state.age)}" autocomplete="off" style="max-width:180px">
+        <input id="age" type="number" inputmode="numeric" min="4" max="99" placeholder="예: 13" value="${esc(state.age)}" autocomplete="off" style="max-width:180px">
         <div class="hint" id="ageHint"></div>
         <div class="hint">이 나이로 <b>키와 머리·몸 비율</b>이 정해집니다. 초등이면 초등 크기로, 중학생이면 중학생 크기로,
           <b>어른이면 어른</b>으로 그려집니다. 비워 두면 위에서 고른 학년으로 대신합니다.</div>
@@ -4732,6 +4737,8 @@ function leanBody(){
   const A = ageSpec();
   return `THE BODY: ${A.en}, ${A.mAge} years old, ${A.cmEn}, ${A.headsEn}, ${A.body}. Everything in frame is drawn at real size so the hero measures this against it, and the costume is tailored to this body.
 ${A.adult ? '' : `
+★ THE NUMBERS ABOVE ARE THE BODY. THE PHOTOGRAPH IS ONLY THE FACE. Read this before anything else: the reference photograph decides what the FACE looks like and nothing more. It does NOT decide the height, the build, the limb length or the proportions — those come from the stated age and the measurements below, always, with no exceptions. If the person in the photograph looks older, taller or more grown-up than the stated age, IGNORE THAT COMPLETELY and build the body to the numbers anyway. The same is true if the photo is a close-up, an odd angle, a low camera, or shows only the head and shoulders — none of that tells you anything about this body. Copy the face; construct the body from the measurements.
+
 BUILD THE PROPORTIONS FIRST, BEFORE ANYTHING ELSE, BECAUSE THIS IS THE THING THAT GOES WRONG. Left alone, you will draw a good-looking young adult and then shrink it. That is not a child and everyone who knows this student will see it immediately. A child is a DIFFERENT SHAPE, not a smaller one. Build it from these four measurements, in this order:
 
 1. THE LIMBS ARE SHORT — ARMS AND LEGS BOTH. This is the strongest signal there is, and it is the one most often missed. LEGS: floor to hip joint is only about ${A.legHeads} head-heights out of ${A.heads} total — LESS THAN HALF the body. Head plus torso together are about ${A.upperHeads} head-heights, MORE than half. On an adult it is the other way round. ARMS: with the arm hanging straight down, the fingertips reach only to the upper thigh, NOT to mid-thigh, and the elbow sits at the waist rather than above it. A child's arm is short and even in thickness, with no forearm taper and no visible bicep. If you have drawn long elegant limbs, you have drawn an adult — shorten arms and legs together and lengthen the torso until the hip line sits ABOVE the halfway point of the figure.
