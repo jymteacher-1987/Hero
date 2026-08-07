@@ -182,6 +182,7 @@ h3{font-size:19px;margin:0 0 10px;letter-spacing:-.02em}
 .timer-mark{position:absolute;top:-4px;left:50%;width:2px;height:19px;background:#eafaff8c;border-radius:2px}
 .timer-legend{display:flex;justify-content:space-between;margin-top:6px;font-size:11.5px;color:var(--dim)}
 .timer-legend b{color:var(--lime)}
+.timer-legend b.dn{color:var(--gold)}
 .timeup{margin-top:14px;border:1px solid #7a3a48;background:#2b141b;color:#ffd8e0;
   border-radius:15px;padding:13px 16px;font-size:14px;font-weight:800;line-height:1.6}
 .question{font-size:clamp(19px,3vw,25px);line-height:1.4;letter-spacing:-.03em;font-weight:900;margin:20px 0 14px}
@@ -2698,7 +2699,7 @@ function viewLabPick(st){
         </button>`).join('')}
     </div>
     <p class="pick-note">고른 실험이 그대로 이 히어로의 능력이 됩니다. 실험을 해 본 뒤 확인 문제를
-      <b>${quizSec()}초</b> 안에 맞히면 완성형으로, <b>${Math.round(quizSec()/2)}초</b> 안에 맞히면 최상급으로 만들어집니다.</p>
+      <b>${Math.round(quizSec()/2)}초</b> 안에 맞히면 <b>최상급 완성형</b>, 그 뒤부터 <b>${quizSec()}초</b>까지 맞히면 <b>완성형</b>으로 만들어집니다.</p>
     ${state.station===0?`<p class="pick-note secret">🗝 4가지 실험이 서로 이어 붙어 <b>하나의 기계</b>가 되는 조합이
       이 학년에 딱 하나 숨어 있습니다. 그 조합을 고르고 확인 문제까지 전부 맞히면
       <b>★5 전설 등급</b>이 열립니다. 어떤 장비끼리 실제로 연결될 수 있을지 생각해 보세요.</p>`:''}
@@ -2785,7 +2786,7 @@ function quizHtml(e){
     return `<div class="quiz-gate">
       <h4>확인 문제</h4>
       <p>위 실험과 원리를 충분히 살펴본 뒤에 누르세요. 누르는 순간부터 <b class="sec">${sec}초</b>가 흐릅니다.<br>
-      시간 안에 맞히면 이 장비가 <b>완성형</b>으로, <b>${Math.round(sec/2)}초</b> 안에 맞히면 <b>최상급 완성형</b>으로 만들어집니다.</p>
+      <b>${Math.round(sec/2)}초</b> 안에 맞히면 이 장비가 <b>최상급 완성형</b>, 그 뒤부터 <b>${sec}초</b>까지 맞히면 <b>완성형</b>으로 만들어집니다.</p>
       <button class="quiz-start" id="quizStart">⏱ 문제 열기 · ${sec}초</button>
     </div>`;
   }
@@ -2796,7 +2797,13 @@ function quizHtml(e){
     <div class="timer">
       <div class="timer-top"><span>남은 시간</span><span class="timer-num" id="tNum">${done?r.leftSec.toFixed(1):sec.toFixed(1)}</span></div>
       <div class="timer-rail"><div class="timer-fill" id="tFill"${done?` style="width:${(r.leftSec/sec*100).toFixed(1)}%"`:''}></div><div class="timer-mark"></div></div>
-      <div class="timer-legend"><span>이 눈금 왼쪽에서 맞히면 <b>최상급</b></span><span>0초</span></div>
+      <div class="timer-legend"><span id="tHint">${
+        done ? (r.timeout ? '시간이 지났습니다 — <b class="dn">시제품</b>'
+              : !r.ok    ? '아쉽습니다 — <b class="dn">시제품</b>'
+              : r.grade === 'ace' ? '<b>최상급 완성형</b>으로 만들어집니다'
+                                  : '<b class="dn">완성형</b>으로 만들어집니다')
+             : '지금 맞히면 <b>최상급 완성형</b>'
+      }</span><span>0초</span></div>
     </div>
     <div class="question">${esc(e.check.q)}</div>
     <div class="answers">
@@ -2838,6 +2845,13 @@ function runQuizTimer(){
     const cls = r > .5 ? '' : (r > .2 ? 'warn' : 'crit');
     num.className = 'timer-num ' + cls;
     fill.className = 'timer-fill ' + cls;
+    /* 눈금을 지나는 순간 안내를 바꾼다 — 지금 맞히면 무엇이 되는지 실시간으로 보여 준다.
+       예전에는 "이 눈금 왼쪽에서 맞히면 최상급" 이라는 고정 문구였는데,
+       막대가 남은 시간이라 왼쪽/오른쪽이 거꾸로 읽혀서 학생들이 헷갈렸다. */
+    const hint = $('#tHint');
+    if(hint) hint.innerHTML = r >= .5
+      ? '지금 맞히면 <b>최상급 완성형</b>'
+      : '지금 맞히면 <b class="dn">완성형</b>';
     if(left <= 0){ quizRAF = null; answerCheck(-1); return; }
     quizRAF = requestAnimationFrame(step);
   };
@@ -4728,11 +4742,11 @@ BUILD THE PROPORTIONS FIRST, BEFORE ANYTHING ELSE, BECAUSE THIS IS THE THING THA
 THE CHECK: cover the face and look only at the body. If a stranger would guess "teenager" or "young adult", it is wrong. They must guess a primary-school child. Fix it by shortening the legs first — that alone corrects most of it.`}
 ${A.adult || A.mAge > 9 ? '' : `
 THE FEELING OF THIS PICTURE IS WARM AND ENDEARING, NOT GRIM. This is a ${A.mAge}-year-old and the poster should make their family smile, so everything below is tuned that way — but it is still a real photograph of the real child, so NONE of it means cartooning, anime, chibi, doll-making, or changing the face from the photograph.
-- FORMS ARE ROUNDED AND CHUNKY. Softly radiused edges, thick padded panels, fat piping, oversized buckles and chunky fasteners. Nothing needle-sharp, nothing sleek and predatory, no blade edges or spikes.
+- FORMS LEAN ROUNDED AND CHUNKY where nothing else decides them: softly radiused edges, thick padded panels, fat piping, oversized buckles and chunky fasteners. ★ THIS IS A PREFERENCE, NOT A BAN, AND THE MOTIF ALWAYS BEATS IT. If the motif is spiky, horned, bladed or sleek — a scorpion's sting, a hedgehog's quills, antlers, a stag beetle's jaws, a shark, a jet — build that exactly as the motif section describes it. Losing it would lose the whole point of this student's design. The rounding only applies to the parts the motif does not claim.
 - THE GEAR IS A LITTLE BIG ON THEM, in the way a school backpack is — a helmet with room in it, gloves with a bit of extra cuff, boots that look sturdy rather than sculpted. Slightly-too-big equipment on a small determined person is the single most endearing thing in this whole picture, so lean into it.
 - THE FACE IS LEFT ALONE. This is the one place the warmth must NOT come from, because changing the expression means redrawing the mouth, the cheeks and the eyes, and then it stops being this child. Copy the face from the photograph as it is. If they are smiling in the photograph, keep exactly that smile — same width, same teeth or no teeth. If they are not, do not add one: their ordinary calm face is correct and a small closed-mouth lift at most. Never invent a big open grin. What you may do is have them face the camera with the chin up and the eyes catching the light — that alone reads as proud without touching the geometry of the face. Likeness beats expression every time.
 - THE POSE IS PLAYFUL AND ENERGETIC — bouncing on the toes, one arm thrown up, leaning eagerly into the camera, caught mid-laugh. Not a menacing braced combat stance.
-- THE LIGHT IS BRIGHT, WARM AND CLEAN, with open soft shadows. No hard rim-lit darkness, no teal-and-orange grimness, no smoke and shadow drama.`}
+- THE LIGHT LEANS BRIGHT, WARM AND CLEAN, with open shadows rather than moody darkness — as a default only. ★ THE CHOSEN SHOT ALWAYS BEATS THIS. Whatever scene, weather, time of day and lighting the shot section names is what gets built, at full strength. If they chose the power-activating shot, the blast is blindingly bright and throws hard coloured light and hard shadows, and that is correct. This line only tips the balance when nothing else has decided it.`}
 
 ${state.gender === 'girl'
 ? `THE CHEST AND STOMACH ARE ONE FLAT PLAIN PANEL. This is the thing this particular poster gets wrong most often, so build it first and build it literally: across the chest and the whole abdomen there is ONE smooth, flat or very gently domed surface, unbroken by any body shape. Think of a piece of equipment — a hard case, an aircraft fuselage panel, a shield face, a beetle's shell segment, a plain armoured breastplate. Its only detail is hardware: straight or angled seams, horizontal banding, a shoulder yoke across the top, a deep belt across the bottom, and fixings.
@@ -4825,6 +4839,7 @@ function leanShot(b, n){
 ${shot.en}
 Build the place, time of day, weather and light it names. The quality level changes how well made and how well lit this is, never what is happening or where.
 ${act ? `WHAT IS HAPPENING: ${moment}
+★ NO FLYING HARDWARE, WHATEVER THE EXPERIMENT WAS: no nails, screws, bolts, nuts, washers, paperclips, tools or scrap metal anywhere in the frame, nothing flying and nothing stuck to anything. What the device sends out is light and energy, never small objects. The eyes or visor are lit and blazing at the same instant.
 HOW STRONGLY IT FIRES: ${actionScale(n)}
 The effect is in the photograph at every level and the hero is mid-action driving it — twisted, one shoulder forward, weight on one foot, an arm locked out, head turned to watch. It lights the face, chest and ground. The other three pieces stay quietly live. Only what a high-speed camera could record: moving parts, sparks, vapour, water, dust, light on a surface, an object in flight — no auras, no beams from the body.
 ` : ''}${b.camera ? b.camera + ' ' : ''}${b.light || ''}
