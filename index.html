@@ -531,10 +531,17 @@ h3{font-size:19px;margin:0 0 10px;letter-spacing:-.02em}
    예전에는 name 에 설명까지 넣고 뒤에 가격을 또 붙여서
    "GPT-5.6 Luna — 가성비 (기본) · 장당 약 4원" 이 되는 바람에
    칸을 넘쳐 잘렸고, 정작 모델 이름이 안 보였다. 설명은 아래 hint 에 적는다. */
+/* 가격은 히어로 1명당 어림값이다 — 프롬프트 4천 토큰 + 출력 1천5백 토큰, 1450원/$ 기준으로
+   OpenRouter 의 실제 단가에 넣어 계산했다. 사고력을 높인 Pro 계열은 속으로 생각을 더 하므로
+   출력 토큰이 늘어 표시값보다 더 나올 수 있다.
+   ★ 넣기 전 확인할 것: input_modalities 에 image 가 있어야 한다(학생 사진을 읽어야 한다).
+     effort:'high' 를 붙이려면 supported_parameters 에 reasoning_effort 가 있어야 한다. */
 const TEXT_MODELS = [
   {id:'openai/gpt-5.6-luna',     name:'GPT-5.6 Luna',     note:'4원',  effort:'high'},
   {id:'openai/gpt-5.6-luna-pro', name:'GPT-5.6 Luna Pro', note:'40원', effort:'high'},
-  {id:'anthropic/claude-opus-5', name:'Claude Opus 5',    note:'80원', effort:'high'},
+  {id:'google/gemini-3.6-flash', name:'Gemini 3.6 Flash', note:'25원', effort:'high'},
+  {id:'anthropic/claude-sonnet-5', name:'Claude Sonnet 5', note:'33원', effort:'high'},
+  {id:'anthropic/claude-opus-5', name:'Claude Opus 5',    note:'83원', effort:'high'},
   {id:'__custom__',              name:'직접 입력…',        note:''}
 ];
 
@@ -546,12 +553,29 @@ const TEXT_MODELS = [
 
    앞의 둘은 교실에서 그림이 나온 것이 확인된 모델이다. 안 되면 여기로 돌아오면 된다.
    맨 아래 두 개는 전용 API 로 바꾼 뒤 새로 넣은 것이라 아직 교실에서 안 돌려 봤다. */
+/* ★★ 여기 고를 때 지켜야 하는 규칙 하나 — output_modalities 에 image 와 text 가 '둘 다' 있어야 한다.
+   이 앱은 chat/completions 로 그림을 부르는데, OpenRouter 는 그 경로에서
+   "그림과 글을 같이 낼 수 있는 모델" 만 받아 준다. 그림만 내는 모델을 넣으면
+   "No endpoints found that support the requested output modalities: image, text" 로 죽는다.
+
+   실제로 이것 때문에 오래 헤맸다. 넣었다가 뺀 것들 —
+     bytedance-seed/seedream-4.5 · black-forest-labs/flux.2-max · flux.2-pro
+     openai/gpt-image-1 · openai/gpt-image-2
+   이 다섯은 전부 output 이 image 뿐이라 이 앱에서는 절대 안 된다. 이름 문제가 아니다.
+   ★ openai/gpt-image-2 와 openai/gpt-5.4-image-2 는 전혀 다른 물건이다. 헷갈리지 마라.
+     앞의 것은 그림만 내고, 뒤의 것은 LLM 을 거쳐 그림과 글을 같이 낸다. 우리에게 필요한 건 뒤의 것이다.
+
+   새 모델을 넣기 전에 반드시 확인해라:
+     https://openrouter.ai/api/v1/models?output_modalities=image
+     → architecture.output_modalities 에 image 와 text 가 둘 다 있는지
+     → architecture.input_modalities 에 image 가 있는지 (학생 사진을 참조로 넣어야 한다) */
 const IMAGE_MODELS = [
-  {id:'google/gemini-3.1-flash-image', name:'Nano Banana 2',   note:'95원'},
-  {id:'google/gemini-3-pro-image',     name:'Nano Banana Pro', note:'190원'},
-  {id:'openai/gpt-image-2',            name:'GPT Image 2',     note:'190원'},
-  {id:'bytedance-seed/seedream-4.5',   name:'Seedream 4.5',    note:'60원'},
-  {id:'__custom__',                    name:'직접 입력…',       note:''}
+  {id:'google/gemini-3.1-flash-image',      name:'Nano Banana 2',    note:'95원'},
+  {id:'google/gemini-3-pro-image',          name:'Nano Banana Pro',  note:'190원'},
+  {id:'openai/gpt-5.4-image-2',             name:'GPT-5.4 Image 2',  note:'50원'},
+  {id:'openai/gpt-5-image',                 name:'GPT-5 Image',      note:'65원'},
+  {id:'google/gemini-3.1-flash-lite-image', name:'Nano Banana 2 Lite', note:'48원'},
+  {id:'__custom__',                         name:'직접 입력…',        note:''}
 ];
 
 /* ar = 생성 비율, w/h = 최종 합성 캔버스 픽셀 */
@@ -2005,10 +2029,12 @@ function viewIntro(){
           <label>프롬프트를 짜는 모델</label>
           <select id="textModel">${modelOptions(TEXT_MODELS, state.textModel)}</select>
           <input id="textCustom" class="${knownText?'hidden':''}" style="margin-top:8px" placeholder="예: openai/gpt-5.6-terra-pro" value="${knownText?'':esc(state.textModel)}">
-          <div class="hint">사진을 보고 히어로 이름과 연출을 설계합니다. 목록의 세 모델은 <b>사고력을 최대(high)로</b> 올려 호출합니다.
-            기본은 가성비가 좋은 <b>Luna</b>입니다. 잘 안 나온 학생만 <b>Luna Pro</b>로 다시 뽑으면 됩니다.<br>
+          <div class="hint">사진을 보고 히어로 이름과 연출을 설계합니다. 목록의 모델은 모두 <b>사고력을 최대(high)로</b> 올려 호출합니다.
+            기본은 가성비가 좋은 <b>Luna</b>입니다. 잘 안 나온 학생만 위 등급으로 다시 뽑으면 됩니다.<br>
             · <b>GPT-5.6 Luna</b> — 가성비 (기본)<br>
-            · <b>GPT-5.6 Luna Pro</b> — 사고력 최대<br>
+            · <b>GPT-5.6 Luna Pro</b> — 같은 모델을 사고력만 올린 것<br>
+            · <b>Gemini 3.6 Flash</b> — 빠르고 저렴, 다른 회사라 장애 때 대비용<br>
+            · <b>Claude Sonnet 5</b> — 한국어 문장이 자연스러움<br>
             · <b>Claude Opus 5</b> — 묘사가 가장 풍부</div>
         </div>
         <div class="field">
@@ -2020,8 +2046,9 @@ function viewIntro(){
             프롬프트로 할 수 있는 것은 이미 다 하고 있어서, 여기서 더 올리려면 모델을 바꾸는 것이 가장 확실합니다.<br>
             · <b>Nano Banana 2</b> — 생성 화질 1위, 가성비 (기본)<br>
             · <b>Nano Banana Pro</b> — 얼굴 유지력 1위<br>
-            · <b>GPT Image 2</b> — 글자·도형을 정확히 그림<br>
-            · <b>Seedream 4.5</b> — 인물 디테일 보존이 강함</div>
+            · <b>GPT-5.4 Image 2</b> — 글자·도형을 정확히 그림<br>
+            · <b>GPT-5 Image</b> — 지시를 꼼꼼히 따름<br>
+            · <b>Nano Banana 2 Lite</b> — 가장 싸고 빠름</div>
         </div>
       </div>
 
@@ -5397,33 +5424,9 @@ async function askImage(prompt){
   const base = { model: state.imageModel, prompt };
   if(refs.length) base.input_references = refs;
 
-  /* 모델마다 받아 주는 파라미터가 다르다.
-     Nano Banana 2 는 resolution(512·1K·2K·4K)을 받지만 GPT Image 2 는 아예 안 받고 quality 를 받는다.
-     안 받는 걸 보내면 400 이 난다. 그래서 많이 얹은 것부터 시도하고 거절당하면 하나씩 덜어낸다.
-     비율(2:3)은 두 모델 다 받는다. 실패한 생성은 요금이 붙지 않으므로 이렇게 해도 손해가 없다. */
-  const ladder = [
-    { ...base, aspect_ratio:f.ar, resolution:'2K' },   // Gemini 계열
-    { ...base, aspect_ratio:f.ar, quality:'high' },    // GPT Image 계열
-    { ...base, aspect_ratio:f.ar },
-    base
-  ];
-
-  let lastErr;
-  for(const p of ladder){
-    try{
-      const d = await orFetch(p, 240000, OR_IMG_URL);
-      const it = d?.data?.[0];
-      if(it?.b64_json) return `data:${it.media_type || 'image/png'};base64,${it.b64_json}`;
-      lastErr = new Error('이미지가 오지 않았습니다.');
-    }catch(err){
-      lastErr = err;
-      /* 키가 틀렸거나 잔액이 없으면 몇 번을 더 해도 똑같다. 바로 멈춘다. */
-      if(err.status === 401 || err.status === 402) throw err;
-    }
-  }
-
-  /* 여기까지 왔으면 전용 API 가 이 모델을 안 받는다는 뜻이다.
-     예전 방식(chat/completions)으로 한 번 더 해 본다 — Nano Banana 2·Pro 는 이쪽으로도 된다. */
+  /* ① 먼저 chat/completions — 위 목록의 모델은 전부 이 경로로 되는 것이 확인된 것들이다.
+     image_config 는 Gemini 전용이라 다른 모델에는 붙이지 않는다. 붙이면 404 가 난다. */
+  let chatErr;
   try{
     const d = await orFetch({
       model: state.imageModel,
@@ -5438,9 +5441,39 @@ async function askImage(prompt){
       url = img?.image_url?.url || img?.url || '';
     }
     if(url) return url;
-  }catch(err){ lastErr = err; }
+    chatErr = new Error('그림이 응답에 들어 있지 않았습니다.');
+  }catch(err){
+    chatErr = err;
+    if(err.status === 401 || err.status === 402) throw err;   // 키·잔액은 더 해봐야 소용없다
+  }
 
-  throw new Error(`그림을 받지 못했습니다 — ${lastErr?.message || '알 수 없는 오류'}`);
+  /* ② 전용 Image API — '직접 입력…' 으로 그림만 내보내는 모델을 넣었을 때를 위한 길이다.
+     모델마다 받는 파라미터가 달라서(예: GPT Image 는 resolution 을 안 받는다)
+     많이 얹은 것부터 보내고 거절당하면 하나씩 덜어낸다. 실패한 생성은 요금이 붙지 않는다. */
+  const ladder = [
+    { ...base, aspect_ratio:f.ar, resolution:'2K' },
+    { ...base, aspect_ratio:f.ar, quality:'high' },
+    { ...base, aspect_ratio:f.ar },
+    base
+  ];
+  let imgErr;
+  for(const p of ladder){
+    try{
+      const d = await orFetch(p, 240000, OR_IMG_URL);
+      const it = d?.data?.[0];
+      if(it?.b64_json) return `data:${it.media_type || 'image/png'};base64,${it.b64_json}`;
+      imgErr = imgErr || new Error('그림이 응답에 들어 있지 않았습니다.');
+    }catch(err){
+      imgErr = imgErr || err;                 // ★ 첫 오류를 남긴다. 뒤엣것이 덮어쓰면 원인이 사라진다
+      if(err.status === 401 || err.status === 402) throw err;
+    }
+  }
+
+  /* ★ 두 경로의 오류를 모두 보여 준다. 예전에는 뒤엣것이 앞엣것을 덮어써서
+     정작 어디서 왜 죽었는지 화면에 안 나왔고, 원인을 찾는 데 한참 걸렸다. */
+  throw new Error(
+    `그림을 받지 못했습니다\n· 기본 경로: ${chatErr?.message || '알 수 없음'}\n· 전용 API: ${imgErr?.message || '알 수 없음'}`
+  );
 }
 
 /* ══════════════════════════════════════════════════════════════
