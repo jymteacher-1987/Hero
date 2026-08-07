@@ -3924,8 +3924,12 @@ the distance between the eyes and the width of each eye; the shape of the eyelid
 
 ★ THE LOWER FACE IS WHERE THE LIKENESS ACTUALLY LIVES, SO TRACE IT. The eyes in this poster are often half hidden behind the costume's eyewear, so a viewer reads this person from EVERYTHING BELOW THE CHEEKBONES. Lay that region over the photograph and match it line for line: the cheeks keep exactly the fullness the photograph gives them, the nose keeps its base and its nostrils, the philtrum keeps its height, both lips keep their thickness and the mouth keeps its width and the set of its corners, the jaw keeps its exact line down both sides, the chin keeps its exact width and shape, and the face keeps the same ratio of jaw width to cheekbone width. Whatever this region is in the photograph is what it is in the poster, at the same size and the same proportions. If the eyewear covers the eyes, this region is the only thing carrying the likeness, so it matters more than anything else in the picture.
 
-WHAT MAY BE IMPROVED — everything that is NOT the geometry of the face:
-better light on them, a clean catchlight in each eye, healthier and clearer skin, a temporary spot or a shine gone, tidier hair, a straighter and prouder posture, a better expression, and a far better photograph than they have ever had of themselves. Flatter them with LIGHTING, GROOMING and BEARING. Never with BONE STRUCTURE.
+WHAT MAY BE IMPROVED — better light, a clean catchlight in each eye, a straighter and prouder posture, and a far better photograph than they have ever had of themselves.
+WHAT MAY BE TIDIED, AND NOTHING ELSE. Two things about a person are not their identity, and those may be cleaned up: STRAY HAIR and a TEMPORARY BLEMISH.
+✔ HAIR — TIDY IT, DO NOT RESTYLE IT. Smooth down flyaway strands, static, frizz and bed-head fluff, and lift a loose strand off the eye or the mouth so the face reads clearly. That is the whole allowance. The CUT, the LENGTH, the PARTING and which side it falls to, the fringe and how low it sits, the hairline, the volume and the overall shape of the hair are IDENTITY and stay exactly as photographed. Do not restyle, do not shorten, do not lengthen, do not add volume, do not slick it back, do not give them a neater haircut. Same head of hair, just settled.
+✔ SKIN — a temporary spot, a shine on the forehead or nose, or a smudge may go. Skin TEXTURE stays real, and every mole, freckle, dimple, scar and birthmark stays exactly where it is. Those are identity too.
+✘ EVERYTHING ELSE STAYS. Do not reshape or darken the brows, do not slim the face or the jaw, do not enlarge the eyes, do not change the smile or the teeth, do not smooth the skin into plastic, do not even out the two sides of the face. The only other improvements allowed are photographic: exposure, white balance that matches the scene, a natural catchlight, and sharpness.
+Flatter them with LIGHTING, GROOMING and BEARING. Never with BONE STRUCTURE. Themselves on their best day — not a better-looking child.
 
 THE LINE BETWEEN THE TWO, STATED PLAINLY: they may look like themselves on their best day. They may not look like somebody else who happens to be good-looking. The single most common failure of this image is a handsome, generic, symmetrical child who is not this child — do not produce that. If you catch yourself making the eyes bigger, the nose smaller, the jaw cleaner, the face slimmer or the features more even, stop: you have started drawing a different person.
 
@@ -4070,7 +4074,7 @@ ${best.length  ? `BEST — ${best.map(nm).join(', ')}. ${best.length===1?'This p
      머리·색·실루엣에도 반드시 흔적을 남기게 한다. */
   const ROLE_LINE = [
     'PRIMARY MOTIF — roughly 60% of the design. It sets the overall silhouette, the mask volume and the dominant colour of the suit. It is the first answer to "what is this hero?"',
-    'SECOND MOTIF — roughly 40% of the design, and it must be just as recognisable as the first. This is NOT an accessory and NOT a small gadget. It owns two complete body systems outright (choose from: back and shoulders / arms and gloves / legs and boots) in its own colour and its own surface texture, it supplies the suit\'s second major colour across a real area, it contributes ONE clearly readable feature to the mask or head, and it becomes its own separate piece of hand-operable equipment.'
+    'SECOND MOTIF — JUST AS NAMEABLE AS THE FIRST, AND THE ONE THAT KEEPS DISAPPEARING. It is NOT an accessory and NOT a small gadget, and the two never blend into each other — they meet at hard seams. It owns THE BACK AND THE SHOULDER LINE outright, with its bulk, shell, wings, spines, vents, crater or plates BUILT at full size and standing off the body so it changes the outline. It also owns ONE complete limb system (arms and gloves, or legs and boots) to the fingertips or the soles in its own colour and texture, it supplies the suit\'s second major colour across a real area, and it contributes ONE clearly readable feature to the mask or head, and it becomes its own separate piece of hand-operable equipment.'
   ];
   const freeMotifs = motifEntries().filter(e=>!e.preset).map(e=>e.ko);
   /* 목록에 없는 것을 직접 적었으면 연출 모델이 써 준 LOOK/POWER 를 쓴다 */
@@ -4857,11 +4861,16 @@ function leanFace(){
   if(!state.photo) return `FACE: an original believable Korean ${ageSpec().en} of ${ageSpec().mAge}, real skin texture, natural slight asymmetry, not a model or anyone famous.`;
   return `THE FACE — DO NOT DRAW A NEW ONE. PUT THIS ONE IN. THIS IS REQUIREMENT NUMBER ONE.
 THIS IS AN EDIT OF THE ATTACHED PHOTOGRAPH, NOT A NEW PICTURE OF SOMEBODY WHO LOOKS LIKE THEM. Carry that head over as it already stands and build the costume, the scene and the light around it. You are re-dressing and re-lighting a real photograph of a real child, never inventing a face from a description.${state.photoFace ? ' Two images are attached — the photograph and the same photograph enlarged on the head. Work from the enlarged one; it is the same person.' : ''}
-COPY EXACTLY, MEASURED OFF THE PHOTOGRAPH: the distance between the eyes and the width of each eye, the eyelids and the fold above them, the shape and length and tip of the nose, the mouth width and the thickness of both lips, the width of the face at the cheekbones against the width at the jaw, the jawline, the chin, the ears, the hairline and the exact cut and fall of the hair, the eyebrows, the skin tone, and every mole, freckle and mark.
+COPY EXACTLY, MEASURED OFF THE PHOTOGRAPH: the distance between the eyes and the width of each eye, the eyelids and the fold above them, the shape and length and tip of the nose, the mouth width and the thickness of both lips, the width of the face at the cheekbones against the width at the jaw, the jawline, the chin, the ears, the hairline, the exact cut, length, parting and fall of the hair, the eyebrows, the skin tone, and every mole, freckle and mark.
 ★ THE LOWER FACE IS WHERE THE LIKENESS ACTUALLY LIVES, SO TRACE IT. The eyes in this poster are often half hidden behind the costume's eyewear, so a viewer reads this person from EVERYTHING BELOW THE CHEEKBONES. Lay that region over the photograph and match it line for line: the cheeks keep exactly the fullness the photograph gives them, the nose keeps its base and its nostrils, the philtrum keeps its height, both lips keep their thickness and the mouth keeps its width and the set of its corners, the jaw keeps its exact line down both sides, the chin keeps its exact width and shape, and the face keeps the same ratio of jaw width to cheekbone width. Whatever this region is in the photograph is what it is in the poster, at the same size and the same proportions. If the eyewear covers the eyes, this region is the only thing carrying the likeness, so it matters more than anything else in the picture.
 KEEP THE UNEVENNESS. One eye a little higher, a nose slightly off centre, a crooked smile, one ear lower — that unevenness is what makes them recognisable. A symmetrical, tidied-up face is a stranger.
 KEEP THEIR EXPRESSION. Smiling in the photograph, keep exactly that smile — same width, same teeth or no teeth. Not smiling, invent none. Likeness beats expression every time.
-NO BEAUTY OR GROOMING EDITS AT ALL. Do not clear or smooth the skin, do not remove a spot or a mark, do not tidy or restyle the hair, do not reshape or darken the brows, do not slim the face or the jaw, do not enlarge the eyes, do not change the smile or the teeth. The only things you may improve are photographic: exposure, white balance that matches the scene, a natural catchlight, and sharpness. Everything else about this head is left exactly as photographed. Age is carried by the BODY, never by reshaping this face. Render the head at portrait detail with no wide-angle stretching.
+WHAT MAY BE TIDIED, AND NOTHING ELSE. Two things about a person are not their identity, and those may be cleaned up: STRAY HAIR and a TEMPORARY BLEMISH.
+✔ HAIR — TIDY IT, DO NOT RESTYLE IT. Smooth down flyaway strands, static, frizz and bed-head fluff, and lift a loose strand off the eye or the mouth so the face reads clearly. That is the whole allowance. The CUT, the LENGTH, the PARTING and which side it falls to, the fringe and how low it sits, the hairline, the volume and the overall shape of the hair are IDENTITY and stay exactly as photographed. Do not restyle, do not shorten, do not lengthen, do not add volume, do not slick it back, do not give them a neater haircut. Same head of hair, just settled.
+✔ SKIN — a temporary spot, a shine on the forehead or nose, or a smudge may go. Skin TEXTURE stays real, and every mole, freckle, dimple, scar and birthmark stays exactly where it is. Those are identity too.
+✘ EVERYTHING ELSE STAYS. Do not reshape or darken the brows, do not slim the face or the jaw, do not enlarge the eyes, do not change the smile or the teeth, do not smooth the skin into plastic, do not even out the two sides of the face. The only other improvements allowed are photographic: exposure, white balance that matches the scene, a natural catchlight, and sharpness.
+Flatter them with LIGHTING, GROOMING and BEARING. Never with BONE STRUCTURE. Themselves on their best day — not a better-looking child.
+Age is carried by the BODY, never by reshaping this face. Render the head at portrait detail with no wide-angle stretching.
 ★ NOTHING ELSE ANYWHERE ON THIS PAGE MAY CHANGE THIS FACE. Not the stated age, not the head-to-body ratio, not the child proportions, not the motif, not the costume, not the mask, not the pose, not the lighting, not the mood. Any line that would round the cheeks, shrink the chin, enlarge the eyes, raise the forehead, smooth the skin into plastic or make the face prettier, cuter, younger or more even LOSES to this one. The ONLY thing on the face that is allowed to change is the eyewear, below.
 
 ★ THE HEAD IS SEEN AT THE SAME ANGLE AS THE PHOTOGRAPH. A face turned to a new angle has to be re-imagined, and the moment it is re-imagined it becomes a different person. So the head is presented the way the photograph presents it: the same yaw, the same tilt, the same side of the face toward the lens, the same amount of each ear showing. If the shot calls for a low heroic camera, keep the low camera for the BODY and have the child bring their chin down so the face stays square to the lens. Front-on in the photograph means front-on here. Everything visible in the photograph is visible here, from the same side.
@@ -4942,22 +4951,54 @@ function leanMotif(b){
   let c = (lastCueList || []).slice(0, 2);
   if(!c.length) c = motifEntries().slice(0, 2).map(e=>({en:e.en||e.ko, d:e.d||'', f:e.f||''}));
   if(!c.length) return '';
-  const F1 = 'Carry its outline, segmentation, real colours and texture across mask, shoulders, seams and boots.';
+  const F1 = 'Carry its outline, segmentation, real colours and texture across the zones it owns.';
   const F2 = 'Build one hand-operable machined device from what it is famous for doing.';
-  const share = ['sets the silhouette, mask volume and main colour (60%)',
-                 'owns two whole body systems in its own colour and texture, one clear head feature, and its own equipment (40%)'];
-  return `THE MOTIF IS THE COSTUME — THE SUIT IS MADE TO LOOK LIKE THIS CREATURE
-${c.map((x,i)=>`▸ ${String(x.en).toUpperCase()}${/[가-힣]/.test(String(x.en)) ? ' (Korean — work out what it names)' : ''} — ${share[i] || share[1]}
+  const two = c.length >= 2;
+  const nm  = i => String(c[i] && c[i].en || '').toUpperCase();
+
+  /* ★ 두 개를 고르면 둘 중 하나가 늘 사라졌다. 이유는 두 가지였다.
+       ① 첫째에게 '실루엣·마스크·주색' 을 다 주고 나면 둘째가 갈 자리가 없다.
+       ② '둘을 융합하라' 는 지시가 곧 약한 쪽을 녹여 없애라는 말로 읽힌다.
+     그래서 지분(%)을 버리고 몸을 아예 갈라 준다. 겹치지 않으면 밀려날 수도 없다.
+     그리고 '융합' 대신 '두 재료가 이음매에서 만난다' 로 바꿨다. */
+  const ZONE = [
+`OWNS: THE HEAD, THE FRONT OF THE TORSO, AND THE FIELD COLOUR.
+   · THE HEADPIECE IS THIS CREATURE'S HEAD — its actual head shape, plus its single most recognisable feature built at full size in three dimensions: standing ears, a muzzle line, horns, a crest, a beak, mandibles, a shell dome, its eye pattern. Not a hint of it. The thing itself.
+   · The chest and abdomen carry its surface — its real texture and its real markings in their real places.
+   · Its main colour is the largest colour on the suit.`,
+`OWNS: THE BACK AND SHOULDERS, ONE WHOLE LIMB SYSTEM, AND THE SECOND COLOUR. THIS IS NOT AN ACCESSORY AND NOT A GADGET.
+   · THE BACK AND SHOULDER LINE ARE THIS CREATURE — its bulk, its shell, wings, spines, vents, crater, plates or tail root, BUILT at full size and standing off the body so it changes the outline. This is what makes it survive; a creature that only exists on the front disappears.
+   · It owns ONE complete limb system outright — either the arms and gloves, or the legs and boots — in its own colour and its own surface texture, all the way to the fingertips or the soles. A whole system, never a piping line and never a trim.
+   · Its colour is the second major colour of the suit across a real area, not an accent.
+   · It supplies its own separate piece of equipment.`];
+
+  const head = two
+    ? `TWO MOTIFS — BOTH MUST BE NAMEABLE. THIS IS THE THING THIS POSTER GETS WRONG MOST OFTEN: one of them quietly vanishes.
+THEY DO NOT BLEND INTO EACH OTHER. Each one owns the part of the body listed under it and the other one never takes that part. They meet at hard seams and shared fittings, the way two different materials are joined — never a morph, never a gradient, never one creature wearing the other as a pattern.`
+    : `THE MOTIF IS THE COSTUME — THE SUIT IS MADE TO LOOK LIKE THIS CREATURE`;
+
+  const body = c.map((x,i)=>`▸ ${String(x.en).toUpperCase()}${/[가-힣]/.test(String(x.en)) ? ' (Korean — work out what it names)' : ''}${two ? `\n   ${ZONE[i] || ZONE[1]}` : ''}
    ON THE COSTUME: ${x.d || F1}
-   AS EQUIPMENT: ${x.f || F2}`).join('\n')}
-Rebuild the silhouette toward it: the headpiece takes its head shape, shoulders and back take its bulk, wings or shell, arms and legs take its limbs, and its surface — scales, fur, chitin, feathers, segments, patterning — is the actual texture of the suit in its real colours. Squint at the figure as a black shape and the creature is already readable. Still a real person in a built costume — human face, human hands, real fabric and plate, not the animal itself and not a mascot suit. Built structure only, across head, torso, arms, legs and back; never a badge or printed graphic.${c.length >= 2 ? ' BOTH are fused into this one garment, sharing seams and fittings. A stranger names both.' : ''}
-★ THE TEST, AND IT IS THE TEST THIS POSTER FAILS MOST OFTEN: a stranger who is told nothing must look at the finished picture and name the creature within a second or two. If they would say "a hero in a nice suit" instead of "that's a fox / an octopus / a volcano", the motif has NOT been built and the picture has failed. To pass it, the creature has to be present in ALL THREE of these places at once, not one of them:
+   AS EQUIPMENT: ${x.f || F2}`).join('\n');
+
+  const test = two
+    ? `★ THE TEST, RUN IT TWICE, ONCE FOR EACH.
+   (a) Cover ${nm(0)}'s zones — the head and the chest — with your hand. Looking only at the back, the shoulders and the limbs that are left, can a stranger name ${nm(1)}? If not, ${nm(1)} was never built. Go back and build it.
+   (b) Now cover ${nm(1)}'s zones. Looking only at the head and the chest, can a stranger name ${nm(0)}?
+   Both have to pass. A stranger who is told nothing must look once and say both names. If they can only say one, this picture has failed however good it looks.
+★ EACH ONE NEEDS ITS OWN NAMEABLE THREE-DIMENSIONAL FEATURE AT FULL SIZE — something you could point at and name, standing off the costume and visible in the silhouette. Two flat textures are not two motifs.`
+    : `★ THE TEST, AND IT IS THE TEST THIS POSTER FAILS MOST OFTEN: a stranger who is told nothing must look at the finished picture and name the creature within a second or two. If they would say "a hero in a nice suit" instead of "that's a fox / an octopus / a volcano", the motif has NOT been built and the picture has failed. To pass it, the creature has to be present in ALL THREE of these places at once, not one of them:
    1. THE HEAD — the headpiece, mask or hood takes the creature's actual head shape and its most recognisable feature at full size and in three dimensions: real standing ears, a muzzle line, horns, a crest, mandibles, a beak, a shell dome, an eye pattern. This is the single strongest signal and it is the one most often left out.
    2. THE BODY AND SILHOUETTE — its bulk, back, limbs and tail. If the creature has a tail, a mane, wings, a shell or quills, they are BUILT and hanging or standing off the costume at full size, not implied by a seam.
-   3. THE SURFACE AND COLOUR — the suit is in the creature's real colours in their real places, with its real texture: fur, scales, chitin, feathers, plates, markings. A fox costume is russet and cream where a fox is russet and cream, with the dark stockings on the lower legs.
-★ A CHEST EMBLEM DOES NOT COUNT AS THE MOTIF AND NEVER SUBSTITUTES FOR IT. A badge on the chest is decoration; the three things above are the costume. And if there is an emblem, it shows the creature — never a letter, an initial, a monogram or the hero's name. A letter on the chest means the motif was skipped.
-★ THE QUALITY LEVEL DECIDES HOW WELL THE MOTIF IS MADE, NEVER WHETHER IT IS THERE. A student who got everything wrong still gets their creature — cut from card and craft foam, marker and poster paint, wavy edges, taped and stapled, joins showing. Rough, home-made, completely recognisable, full size. Never a printed badge, never left off.
-★ AND IT IS NEVER GIVEN UP FOR EQUIPMENT. If a device wants its place, the DEVICE moves. If a feature truly cannot stay, it moves at full size to head, shoulders, back, chest, arms or legs. Never shrunk, never faded, never dropped.${b && b.motif ? `\n${b.motif}` : ''}`;
+   3. THE SURFACE AND COLOUR — the suit is in the creature's real colours in their real places, with its real texture: fur, scales, chitin, feathers, plates, markings. A fox costume is russet and cream where a fox is russet and cream, with the dark stockings on the lower legs.`;
+
+  return `${head}
+${body}
+Still a real person in a built costume — human face, human hands, real fabric and plate, not the animal itself and not a mascot suit. Built structure only, across head, torso, arms, legs and back; never a badge or a printed graphic.
+${test}
+★ A CHEST EMBLEM DOES NOT COUNT AS ${two ? 'EITHER MOTIF' : 'THE MOTIF'} AND NEVER SUBSTITUTES FOR ${two ? 'THEM' : 'IT'}. A badge on the chest is decoration; the zones above are the costume. And if there is an emblem, it shows ${two ? 'one of the creatures' : 'the creature'} — never a letter, an initial, a monogram or the hero's name. A letter on the chest means the motif was skipped.
+★ THE QUALITY LEVEL DECIDES HOW WELL ${two ? 'EACH MOTIF IS' : 'THE MOTIF IS'} MADE, NEVER WHETHER ${two ? 'THEY ARE' : 'IT IS'} THERE. A student who got everything wrong still gets ${two ? 'both creatures' : 'their creature'} — cut from card and craft foam, marker and poster paint, wavy edges, taped and stapled, joins showing. Rough, home-made, completely recognisable, full size. Never a printed badge, never left off.
+★ AND ${two ? 'NEITHER OF THEM IS EVER' : 'IT IS NEVER'} GIVEN UP FOR EQUIPMENT. If a device wants ${two ? 'a motif zone' : 'its place'}, the DEVICE moves. If a feature truly cannot stay, it moves at full size to another part of the same ${two ? 'creature' : 'body'} — head, shoulders, back, chest, arms or legs. Never shrunk, never faded, never dropped.${b && b.motif ? `\n${b.motif}` : ''}`;
 }
 
 /* ⑤ 실험 장비 4개 */
@@ -5161,12 +5202,15 @@ async function tightenPrompt(lean){
      그래서 빼고 압축한 다음, 원문 그대로 앞뒤에 다시 붙인다.
      문단 첫머리로 찾는다 — leanFace/leanMotif/faceCheckTail 의 첫 줄과 맞춰 둘 것. */
   const HEAD_FACE  = 'THE FACE — DO NOT DRAW A NEW ONE';
-  const HEAD_MOTIF = 'THE MOTIF IS THE COSTUME';
+  /* ★ 모티브 블록의 첫 줄은 1개일 때와 2개일 때가 다르다. 둘 다 잡아야 한다.
+     하나만 잡아 두면 2개 고른 학생의 모티브가 압축기로 넘어가 통째로 줄어든다 —
+     둘 중 하나가 사라지던 바로 그 사고다. */
+  const HEAD_MOTIF = ['THE MOTIF IS THE COSTUME', 'TWO MOTIFS —'];
   const HEAD_TAIL  = '★ THE FACE — CHECK THIS LAST';
   const front = [], back = [], rest = [];
   lean.split('\n\n').forEach(x=>{
     const t = x.trim();
-    if(t.startsWith(HEAD_FACE) || t.startsWith(HEAD_MOTIF)) front.push(x);
+    if(t.startsWith(HEAD_FACE) || HEAD_MOTIF.some(h => t.startsWith(h))) front.push(x);
     else if(t.startsWith(HEAD_TAIL)) back.push(x);
     else rest.push(x);
   });
