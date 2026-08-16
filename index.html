@@ -5018,7 +5018,9 @@ ${A.adult ? '' : `
 ★ THE PHOTOGRAPH IS ONLY THE FACE — IT DOES NOT DECIDE THE BODY OR THE FRAMING. Height, build, limb length and proportion come from the numbers above, even if the person in the photo looks older or taller. And however the reference is cropped, this picture is FULL-LENGTH: clear air above the head down to the soles of both boots.
 BUILD THE PROPORTIONS FIRST — a child is a DIFFERENT SHAPE, not a smaller adult, and left alone you will draw a young adult and shrink it.
 1. SHORT LIMBS, ARMS AND LEGS BOTH. Floor to hip is only about ${A.legHeads} head-heights of ${A.heads} — less than half the figure — while head plus torso is about ${A.upperHeads}, more than half. Hanging straight down, the fingertips reach only the upper thigh and the elbow sits at the waist. Arms are even in thickness, no forearm taper, no bicep.
-2. THE HEAD IS BIG — ${A.headsEn}, slightly too large for the body, and that wrongness IS the childness. ${state.photo ? 'Place the photographed head first at full size and fit the body under it; it is resized as one whole piece and its interior is untouched. If the head looks too small, make the BODY smaller.' : 'Draw the head first at full size and fit the body under it.'}
+2. ${state.photo
+  ? `THE HEAD IS NOT REDRAWN, RESHAPED OR RESIZED IN ITSELF. Take the photographed head exactly as it is, place it at full size, and build the body underneath it to the measurements here. What makes this figure read as a child is the SHORT LEGS, the narrow shoulders and the even limbs — never anything done to the head. If the proportion still looks off, make the BODY smaller. Never round the cheeks, shrink the chin, enlarge the eyes, raise the forehead or widen the cranium: every measurement inside this head is the photograph's.`
+  : `THE HEAD IS BIG — ${A.headsEn}, slightly too large for the body, and that wrongness IS the childness. Draw the head first at full size and fit the body under it.`}
 3. NARROW SHOULDERS — about two head-widths, no deltoid caps, no V-taper; the body runs straight from armpit to hip with no waist.
 4. SHORT THIN NECK, small hands and feet with short blunt fingers, slim even limbs with no adult muscle.
 THE CHECK: cover the face and look only at the body — a stranger must guess a child, not a teenager. Fix it by shortening the legs first.`}
@@ -5184,8 +5186,15 @@ function leanShot(b, n){
     ? ([1,3,2,0].map(i=>g[i]).find(x=>x && ACTION_MOMENT[x.id]) || g.find(x=>ACTION_MOMENT[x.id]) || null) : null;
   /* 발동 장면 원문은 길다. 핵심 두 문장만 쓴다 — 무슨 일이 벌어지는가와 몸이 어떻게 반응하는가. */
   const moment = act ? String(ACTION_MOMENT[act.id]).split(/(?<=\.)\s+/).slice(0,3).join(' ') : '';
+  /* ★ 촬영 컷 원문에는 '로우앵글 광각 3/4 카메라' 같은 문장이 들어 있다.
+     사진이 붙어 있으면 그건 얼굴을 새 각도로 다시 그리라는 말이 되어 닮음을 깨뜨린다.
+     컷은 그대로 두고, 그 각도가 '몸에만' 적용된다는 것을 바로 옆에서 못박는다. */
+  const headHold = state.photo
+    ? `
+★ THE CAMERA MOVES, THE HEAD DOES NOT. Any low, high, wide or three-quarter framing named here applies to the BODY and the scene. The head stays at the photograph's own angle, square to the lens, at portrait focal length with no wide-angle stretching of the face — the hero brings their chin down or turns their shoulders instead. A face redrawn at a new angle is a different child.`
+    : '';
   return `THE SHOT — "${shot.name}"
-${shot.en}
+${shot.en}${headHold}
 Build the place, time of day, weather and light it names. The quality level changes how well made and how well lit this is, never what is happening or where.
 ${act ? `WHAT IS HAPPENING: ${moment}
 ★ NO FLYING HARDWARE, WHATEVER THE EXPERIMENT WAS: no nails, screws, bolts, nuts, washers, paperclips, tools or scrap metal anywhere in the frame, nothing flying and nothing stuck to anything. What the device sends out is light and energy, never small objects.
