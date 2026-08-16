@@ -5072,6 +5072,13 @@ function faceCheckTail(){
    그러면 모티브가 안 보이고, 이 앱에서 그건 얼굴이 뭉개지는 것 다음으로 나쁜 실패다.
    그래서 '지우지 말고 옮겨라' 를 부위별로 지정한다.
    그리고 안경을 쓴 학생에게는 이게 오히려 정답이 된다 — 개구리 눈이 곧 그 아이의 새 안경이다. */
+/* 목록에 없는 것을 직접 적은 학생은 이름이 한글로 남을 수 있다.
+   그림 모델에게 '해파리' 는 아무 뜻이 없으므로, 무엇을 가리키는 말인지 알아내라고 붙여 준다.
+   (연출 모델이 영어 이름을 돌려주면 그쪽이 먼저 쓰이고 이 힌트는 안 붙는다.) */
+function motifNameHint(name){
+  return /[가-힣]/.test(String(name || '')) ? ' (a Korean word — work out what creature or thing it names, and build THAT)' : '';
+}
+
 function motifFaceRule(){
   if(!state.photo) return '';
   return `WHEN A MOTIF FEATURE LANDS ON THE FACE, IT MOVES — IT IS NEVER DELETED.
@@ -5118,7 +5125,7 @@ EACH FEATURE IS A BUILT THREE-DIMENSIONAL OBJECT AT FULL SIZE, standing off the 
 THE CREATURE'S REAL COLOURS GO WHERE THEY REALLY ARE, with its real surface: fur, scales, chitin, feathers, plates, markings.
 ${relocate}
 Still a real person in a built costume — human face, human hands, real fabric and plate, never a mascot suit.
-THE CHEST EMBLEM, IF THERE IS ONE, IS ${two ? `${NM(0)} OR ${NM(1)}` : NM(0)} AND NOTHING ELSE: that creature's own silhouette or its head seen straight on, sculpted in relief, with its recognisable parts actually drawn — a stranger names the creature from across a room. NOT a card suit, NOT a spade, heart, diamond or club, NOT a shield, star, lightning bolt, hexagon, circle or any abstract geometric badge, NOT a letter, initial, monogram or name, and NOT a rounded blob that merely suggests the creature. If it cannot be drawn as that creature clearly, leave the chest plain — an emblem that reads as a shape instead of the creature is worse than none.
+THE CHEST EMBLEM, IF THERE IS ONE, IS ${two ? `${NM(0)}${motifNameHint(NM(0))} OR ${NM(1)}${motifNameHint(NM(1))}` : NM(0) + motifNameHint(NM(0))} AND NOTHING ELSE: that creature's own silhouette or its head seen straight on, sculpted in relief, with its recognisable parts actually drawn — a stranger names the creature from across a room. NOT a card suit, NOT a spade, heart, diamond or club, NOT a shield, star, lightning bolt, hexagon, circle or any abstract geometric badge, NOT a letter, initial, monogram or name, and NOT a rounded blob that merely suggests the creature. If it cannot be drawn as that creature clearly, leave the chest plain — an emblem that reads as a shape instead of the creature is worse than none.
 THE QUALITY LEVEL DECIDES HOW WELL ${two ? 'EACH CREATURE IS' : 'THE CREATURE IS'} MADE, NEVER WHETHER ${two ? 'THEY ARE' : 'IT IS'} THERE: at the lowest level ${two ? 'both are' : 'it is'} cut from card and craft foam with wavy edges and visible tape — rough, home-made, full size, completely recognisable.${b && b.motif ? `\n${b.motif}` : ''}`;
 }
 
@@ -5404,11 +5411,12 @@ function leanHeadline(){
     : noGlasses()    ? ' Nothing sits over their eyes: both eyes are bare, open and lit.'
     : '';
   return `READ THIS PARAGRAPH FIRST. IF YOU FOLLOW ONLY ONE THING ON THIS PAGE, FOLLOW THIS.
-THIS HERO IS BUILT TO LOOK LIKE ${NM}. A stranger who is told nothing must look at the finished picture for ONE SECOND and say "${low}". ${two
+THIS HERO IS BUILT TO LOOK LIKE ${NM}${motifNameHint(NM)}. A stranger who is told nothing must look at the finished picture for ONE SECOND and say "${low}". ${two
   ? `Both creatures are BUILT at full size on different parts of the body, and both must be nameable — if a viewer can only name one, the picture has failed.`
   : `If the honest answer would be "a hero in a nice suit", the picture has failed. The creature is built into the silhouette, the surface and the colour, not printed on the chest.`}
 ${state.photo ? `THE FACE IS THE ATTACHED PHOTOGRAPH — the same child, and it is uncovered: nothing crosses the face from the eyebrows down to the chin.${eyes}
-` : ''}Everything further down explains HOW to build that. Nothing further down replaces this paragraph.`;
+` : ''}THE WHOLE BODY IS IN THE FRAME: a full-length standing shot with clear air above the head and both boots complete with their soles on the ground. Not a portrait, not head-and-shoulders, not waist-up, not cropped at the knees or the ankles — however the reference photograph is cropped, this one is full-length. Set the camera distance for that first, before anything else.
+Everything further down explains HOW to build that. Nothing further down replaces this paragraph.`;
 }
 
 function buildLeanPrompt(b){
@@ -5423,6 +5431,10 @@ function buildLeanPrompt(b){
     leanHeadline(),
     leanFace(),
     leanMotif(b),
+    /* ★ 모티브를 하나도 안 고른 학생에게는 leanMotif 가 빈 문자열을 돌려준다.
+       그러면 엠블럼 규칙까지 통째로 빠져서, 가슴에 스페이드·별·글자가 다시 나온다.
+       그 경우에만 최소한의 엠블럼 규칙을 따로 넣는다. */
+    leanMotif(b) ? '' : `THE CHEST: if this costume carries an emblem, it is a built three-dimensional object made from the costume's own materials — a sculpted relief of a real thing this hero is about. NOT a card suit (no spade, heart, diamond or club), NOT a star, lightning bolt, shield, hexagon or any abstract geometric badge, and NOT a letter, initial, monogram or name. If none of that can be built convincingly, leave the chest plain.`,
     leanGear(),
     b.picture ? `THE PICTURE: ${b.picture}` : '',
     leanShot(b, n),
