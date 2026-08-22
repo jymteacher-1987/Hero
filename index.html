@@ -594,7 +594,7 @@ const TEXT_MODELS = [
      https://openrouter.ai/api/v1/models?output_modalities=image
      → architecture.output_modalities 에 image 와 text 가 둘 다 있는지
      → architecture.input_modalities 에 image 가 있는지 (학생 사진을 참조로 넣어야 한다) */
-/* ★ 기본값을 Nano Banana Pro 로 둔 이유 — 이 앱에서 실패의 대부분은 '얼굴이 안 닮는 것' 이다.
+/* ★ 기본값은 Nano Banana 2 다. 예전에 Pro 를 기본으로 둔 이유 — 이 앱에서 실패의 대부분은 '얼굴이 안 닮는 것' 이다.
    포스터에 딴사람이 그려지면 나머지가 아무리 좋아도 그 학생에게는 실패작이다.
    프롬프트는 이미 할 수 있는 걸 다 하고 있다(참조 2장, 가족이 알아봐야 한다는 검사 조항까지).
    그래서 남은 지렛대는 모델뿐이고, 얼굴 유지력이 가장 좋은 것을 기본으로 놓는 게 맞다.
@@ -2046,7 +2046,7 @@ const state = {
   page:'intro',
   key:savedKey,
   textModel:'openai/gpt-5.6-luna',
-  imageModel:'google/gemini-3-pro-image',
+  imageModel:'google/gemini-3.1-flash-image',
   format:'selphy-post',
   level:'',
   photo:'',
@@ -2163,9 +2163,9 @@ function viewIntro(){
           <select id="imageModel">${modelOptions(IMAGE_MODELS, state.imageModel)}</select>
           <input id="imageCustom" class="${knownImage?'hidden':''}" style="margin-top:8px" placeholder="예: google/gemini-3.1-flash-image" value="${knownImage?'':esc(state.imageModel)}">
           <div class="hint">찍은 사진을 참조해 히어로 사진을 만듭니다.
-            얼굴 정체성을 가장 강하게 지키기 위해 <b style="color:var(--key)">Nano Banana Pro를 기본값</b>으로 사용합니다.<br>
-            · <b>Nano Banana Pro</b> — 얼굴 유지력 1위 <b>(기본)</b>, 값은 높고 조금 느림<br>
-            · <b>Nano Banana 2</b> — 화질 좋고 빠름<br>
+            <b style="color:var(--key)">Nano Banana 2를 기본값</b>으로 사용합니다. 얼굴이 계속 달라지면 Pro 로 올려 보세요.<br>
+            · <b>Nano Banana 2</b> — 화질 좋고 빠름 <b>(기본)</b><br>
+            · <b>Nano Banana Pro</b> — 얼굴 유지력 1위, 값은 높고 조금 느림<br>
             · <b>Nano Banana 2 Lite</b> — 가장 싸고 빠름, 연습용</div>
         </div>
       </div>
@@ -3586,7 +3586,7 @@ const SIGNATURE_ITEM = {
   balloon:      'empties a pressurised air bladder to push the hero forward, hardest at the start and weaker as it empties. It needs: the bladder visible inside its shell, a hand release, and a line running to it',
   spectrum:     'splits incoming light into its separate colours so they can be read one at a time. It needs: a narrow entry slit, the dispersing element itself on show, and a surface for the spectrum to land on',
   rainbow:      'splits incoming light into its separate colours so they can be read one at a time. It needs: a narrow entry slit, the dispersing element itself on show, and a surface for the spectrum to land on',
-  mirror:       'turns a beam of light to wherever it is aimed, at exactly the angle it arrived. It needs: polished facets on a pivot, a way to open and lock the angle one-handed, and a sighting mark',
+  mirror:       'turns a beam of light to wherever it is aimed, at exactly the angle it arrived. It needs: reflective facets on a pivot (their finish follows the quiz grade of this very piece — mirrored foil taped to card at ROUGH, true polished glass only at the top grades), a way to open and lock the angle one-handed, and a sighting mark',
   fluorescence: 'emits ultraviolet that is almost invisible itself but lights up the suit seams and any fluorescent trace it lands on. It needs: a filtered emitter head, something to aim along, and a switch',
   shadow:       'throws a beam whose distance from an object decides how big a shadow that object casts. It needs: a reflector, a visible filament or emitter, and a focus adjustment',
   hydrophobic:  'applies the water-repellent coating. It needs: a reservoir of it, a hand trigger, and a nozzle beaded with water that will not wet it',
@@ -3845,7 +3845,7 @@ ${GLASSES_VERDICT}`
 ${GLASSES_VERDICT}`;
 
   return state.photo ? `IDENTITY — the most important requirement
-This must be the same human being as in the reference photo. Preserve their exact facial structure, eye shape and spacing, brow, nose, mouth, jawline, ear shape, skin tone, freckles or moles, apparent age, facial expression, eye direction, and the head's exact yaw, pitch and roll. THE FACE BOUNDARY IS LOCKED, THE HAIRSTYLE IS NOT. The forehead hairline, the temple and sideburn line where hair meets face, and the hair colour stay as photographed. Everything else about the hair is redesigned for this hero: a deliberate styled cut with its own length, shape, volume, parting and texture. It never redraws the forehead hairline, never falls across the face and never hides an eye. Do not beautify, do not slim or reshape the face, do not age them up or down, do not substitute a generic model. Body proportions must match a real person of that age. Whoever the reference shows — a child, a teenager or an adult — the hero is unmistakably that same person, at that same apparent age.
+This must be the same human being as in the reference photo. Preserve their exact facial structure, eye shape and spacing, brow, nose, mouth, jawline, ear shape, skin tone, freckles or moles, apparent age, facial expression, eye direction, and the head's exact yaw, pitch and roll. THEIR ETHNICITY AND COMPLEXION COME FROM THE PHOTOGRAPH AND NOWHERE ELSE — never substitute a Western or Caucasian face, never lighten the skin and never restyle the eyes towards a different ancestry. THE FACE BOUNDARY IS LOCKED, THE HAIRSTYLE IS NOT. The forehead hairline, the temple and sideburn line where hair meets face, and the hair colour stay as photographed. Everything else about the hair is redesigned for this hero: a deliberate styled cut with its own length, shape, volume, parting and texture. It never redraws the forehead hairline, never falls across the face and never hides an eye. Do not beautify, do not slim or reshape the face, do not age them up or down, do not substitute a generic model. Body proportions must match a real person of that age. Whoever the reference shows — a child, a teenager or an adult — the hero is unmistakably that same person, at that same apparent age.
 
 ${eyes}`
 /* 사진 없이 진행한 경우 — 얼굴을 새로 만들되, 실존 인물과 닮지 않게 하고 나이는 학년에 맞춘다 */
@@ -4001,8 +4001,8 @@ function openingLine(n){
     ? 'a school student in a costume they built themselves, caught at the exact moment the device they made actually fires'
     : 'a school student in a costume they built themselves';
   const KIND = [
-`A meticulous photorealistic hero photograph of ${SUBJECT}, proudly wearing the roughest hand-built workshop prototype in the set. The costume is crude; the camera craft, composition and clarity are excellent.`,
-`A meticulous photorealistic hero photograph of ${SUBJECT}, with one properly made piece and three visibly rough hand-built pieces. The difference is in the workmanship, never in the quality of the photograph.`,
+`A meticulous photorealistic hero photograph of ${SUBJECT}, proudly wearing the roughest hand-built workshop prototype in the set — cardboard, foam, offcuts, tape and hot glue, hand-cut and unevenly painted, with nothing on the body that looks factory-made. The costume is crude; the camera craft, composition and clarity are excellent.`,
+`A meticulous photorealistic hero photograph of ${SUBJECT}, with ONE properly made piece and THREE visibly rough hand-built pieces of cardboard, foam, offcuts and tape. The one good piece must be obvious at a glance. The difference is in the workmanship, never in the quality of the photograph.`,
 `A meticulous photorealistic hero photograph of ${SUBJECT}, with half the costume properly made and half visibly unfinished. Every material and rough edge is shown clearly and respectfully.`,
 `A photorealistic still frame from a live-action superhero film, captured on a cinema camera with real glass. Properly lit and properly built — a real film image, held one notch below the very top.`,
 `A single photorealistic still frame from a live-action superhero film, captured on a cinema camera with real anamorphic glass, lit and composed like the final theatrical poster.`,
@@ -5118,7 +5118,8 @@ function leanFace(){
 ${eyewearGrade()}`
 : `EYEWEAR — THIS CHILD HAS BARE EYES, SO NOTHING NEW GOES OVER THEM. Both eyes and both eyebrows are bare, open and lit, exactly as photographed. No added glasses, goggles, visor, lens band, lens rig or mask crosses them. Any optical experiment device is mounted on a hand, forearm, shoulder, chest or collar. If the reference already contains glasses or goggles pushed up into the hair, forehead or crown, preserve that exact photographed object at that exact position and never move it down over the eyes.`;
   return `THE FACE — DO NOT DRAW A NEW ONE. PUT THIS ONE IN. THIS IS REQUIREMENT NUMBER ONE.
-This picture is an EDIT of the attached photograph: the same ${subjectWord()}'s locked face, re-lit and re-dressed, never a new face invented from a description.${state.photoFace ? ' REFERENCE 1 is the enlarged face and is the identity authority. REFERENCE 2 is the original photograph and supplies wider hair, posture and lighting context.' : ''}
+This picture is an EDIT of the attached photograph: the same ${subjectWord()}'s locked face, re-lit and re-dressed, never a new face invented from a description.
+★ THE PERSON IN THE REFERENCE IS THE ONLY PERSON ALLOWED IN THIS PICTURE. Take their ETHNICITY, SKIN TONE, EYE SHAPE and HAIR COLOUR straight off the photograph. Do NOT substitute a Western, Caucasian, or generic superhero face, and do not lighten the skin, round the eyes or change the hair colour towards one. This is a Korean school, the reference is normally an East Asian face, and a stranger appearing in the poster is the single worst failure this picture can have. If the reference is unclear, copy what you CAN see — never invent the rest.${state.photoFace ? ' REFERENCE 1 is the enlarged face and is the identity authority. REFERENCE 2 is the original photograph and supplies wider hair, posture and lighting context.' : ''}
 COPY OFF THE PHOTOGRAPH, MEASURED: the distance between the eyes and the width of each eye, the eyelids, the length, width and tip of the nose, the mouth width and both lip thicknesses, the width at the cheekbones against the width at the jaw, the jawline, the chin, the ears, the hairline, the eyebrows, the skin tone, every mole and freckle, and the natural unevenness that makes them recognisable.
 ★ THE LOWER FACE CARRIES THE LIKENESS — cheeks, nose base, philtrum, lips, jaw and chin. Lay that region over the photograph and match it line for line, at the same size and proportions.
 SAME HEAD POSE AS THE PHOTOGRAPH: copy the exact yaw, pitch and roll, facial perspective, gaze direction, side of the face to the lens and amount of each ear showing. Camera drama and body motion apply below the neck; the neck supports the photographed head pose without turning, tilting or lifting it.
@@ -5137,7 +5138,13 @@ TEST: hold this beside the photograph — their family says "that's them" withou
 function leanBody(){
   const A = ageSpec();
   return `THE BODY: ${A.en}, ${A.mAge} years old, ${A.cmEn}, ${A.headsEn}, ${A.body}. Everything in frame is drawn at real size so the hero measures this against it, and the costume is tailored to this body.
-${A.adult ? '' : `
+${A.adult ? '' : A.mAge >= 13 ? `
+★ THE PHOTOGRAPH IS ONLY THE FACE — IT DOES NOT DECIDE THE BODY OR THE FRAMING. Height, build and proportion come from the numbers above, and however the reference is cropped, this picture is FULL-LENGTH: clear air above the head down to the soles of both boots.
+THIS IS A TEENAGER — NOT A CHILD, AND NOT A GROWN ADULT. Both mistakes are easy, so build it deliberately:
+1. THE LIMBS ARE LONG, NOT SHORT. Floor to hip is about ${A.legHeads} head-heights of ${A.heads}, so the figure divides close to halfway and the legs read long. Do NOT shorten the arms or legs — that is exactly how a ${A.mAge}-year-old turns into a small child.
+2. LEAN AND LIGHTLY BUILT. A slim frame with real but unbulked muscle, ${A.mAge >= 16 ? 'shoulders close to adult width but without the mass of a heavy adult build' : 'shoulders only just beginning to widen'}, a flat straight torso, and hands and feet already near adult size.
+3. ${state.photo ? 'THE HEAD IS NOT REDRAWN, RESHAPED OR RESIZED. Take the photographed head exactly as it is, place it at full size, and build the body underneath it to the measurements here. If the figure reads wrong, fix the BODY — never the head.' : 'The head is only a shade large for the frame, barely past adult proportion.'}
+THE CHECK: cover the face and look only at the body — a stranger must guess about ${A.mAge}: neither a small child nor a thirty-year-old.` : `
 ★ THE PHOTOGRAPH IS ONLY THE FACE — IT DOES NOT DECIDE THE BODY OR THE FRAMING. Height, build, limb length and proportion come from the numbers above, even if the person in the photo looks older or taller. And however the reference is cropped, this picture is FULL-LENGTH: clear air above the head down to the soles of both boots.
 BUILD THE PROPORTIONS FIRST — a child is a DIFFERENT SHAPE, not a smaller adult, and left alone you will draw a young adult and shrink it.
 1. SHORT LIMBS, ARMS AND LEGS BOTH. Floor to hip is only about ${A.legHeads} head-heights of ${A.heads} — less than half the figure — while head plus torso is about ${A.upperHeads}, more than half. Hanging straight down, the fingertips reach only the upper thigh and the elbow sits at the waist. Arms are even in thickness, no forearm taper, no bicep.
@@ -5186,7 +5193,7 @@ LIGHT: ${low
    그래서 함수로 빼 둔다. buildLeanPrompt 와 tightenPrompt 가 같은 것을 쓴다. */
 function faceCheckTail(){
   if(!state.photo) return '';
-  return `★ THE FACE — CHECK THIS LAST AND CHECK IT HARDEST. Hold the finished head beside the attached photograph: pupil distance against face width, eye height between chin and crown, nose length, mouth width, cheekbone-to-jaw ratio, chin shape, preserved hairline and temple/sideburn boundary. The photographed expression, gaze, visible teeth and exact head yaw, pitch and roll also match. Outside that locked boundary the hair may be a completely different, deliberately styled cut; only its colour and the boundary around the face do not move. Cover the eyes on both pictures and compare the cheeks, nose base, mouth, jawline and chin. If any feature, expression or angle has drifted, put the photographed head back and rebuild the picture around it, never the other way round. ${wearsGlasses()
+  return `★ THE FACE — CHECK THIS LAST AND CHECK IT HARDEST. Hold the finished head beside the attached photograph: pupil distance against face width, eye height between chin and crown, nose length, mouth width, cheekbone-to-jaw ratio, chin shape, preserved hairline and temple/sideburn boundary. The photographed expression, gaze, visible teeth and exact head yaw, pitch and roll also match. Outside that locked boundary the hair may be a completely different, deliberately styled cut; only its colour and the boundary around the face do not move. Cover the eyes on both pictures and compare the cheeks, nose base, mouth, jawline and chin. ALSO ASK THE BLUNT QUESTION: is this the same ethnicity, the same skin tone and the same hair colour as the photograph? If a different-looking person has appeared — especially a Western or Caucasian face — throw the image away and rebuild it from the photograph. If any feature, expression or angle has drifted, put the photographed head back and rebuild the picture around it, never the other way round. ${wearsGlasses()
   ? 'AND THE EYEWEAR: it is the newly designed hero frame from the FACE section, NOT the glasses in the photograph — if it still looks like the everyday pair they wear, rebuild it. Its lenses are clear and both eyes are fully visible and unchanged behind them.'
   : 'The eyes remain free of new eyewear, exactly as the photograph shows. Any photographed glasses or goggles already pushed up into the hair, forehead or crown remain at their exact original shape and position.'}`;
 }
@@ -5343,6 +5350,27 @@ The effect is in the photograph at every level and the hero is mid-action drivin
 }
 
 /* ⑨ 문제 결과 = 제작 마감. 촬영 품질과 모티브 존재는 점수와 분리한다. */
+/* ★ 등급 상한선의 압축판. 이것이 없어서 문제를 하나만 맞힌 학생에게도
+   먋진 옷이 나왔다. 긴 qualityCap() 은 규칙집(텍스트 모델용)에만 있었고,
+   정작 그림을 그리는 모델은 부드러운 leanQuality() 한 장만 받았다.
+   여기서는 짧게, 대신 구체적으로 말한다 — 무엇으로 만들었고 무엇은 없는가. */
+function leanCraftCap(n){
+  const K = Math.max(0, Math.min(5, n));
+  if(K >= 3) return '';
+  const MADE_OF = 'cardboard, craft foam, fabric offcuts, foil, jar lids and other raw classroom material, held together with visible tape, cable ties, hot glue, exposed screws and staples, with hand-cut wavy edges, mismatched pieces, wrinkled fabric and uneven brush-marked paint';
+  const BAN = 'NOT ON A ROUGH PIECE, AT ALL: moulded or vacuum-formed plastic armour, machined metal, polished, chromed, gilded or glossy surfaces, crisp panel gaps, flush joins, seamless curves, precision fittings, clean speculars, or anything that looks factory-made or shop-bought. If a surface would photograph like real film-grade armour, it is wrong for this piece.';
+  const HEAD = [
+`★ HOW WELL IT IS MADE — THIS STUDENT GOT NONE OF THE FOUR QUESTIONS RIGHT, AND THE COSTUME MUST SHOW IT. ALL FOUR PIECES ARE ROUGH.
+This is a costume built by hand this week out of ${MADE_OF}. Nothing on this body is professionally made.`,
+`★ HOW WELL IT IS MADE — THIS STUDENT GOT ONE OF THE FOUR QUESTIONS RIGHT, AND THE COSTUME MUST SHOW IT. ONE PIECE IS PROPERLY MADE; THE OTHER THREE ARE ROUGH.
+Exactly one piece is cleanly built. The other three are made by hand out of ${MADE_OF}, and a stranger must be able to point at the one good piece immediately.`,
+`★ HOW WELL IT IS MADE — THIS STUDENT GOT TWO OF THE FOUR QUESTIONS RIGHT, AND THE COSTUME MUST SHOW IT. HALF IS PROPERLY MADE, HALF IS ROUGH.
+Two pieces are cleanly built. The other two are made by hand out of ${MADE_OF}. The contrast between the two halves IS the picture, and someone must be able to point at which half is which.`];
+  return `${HEAD[K]}
+${BAN}
+WHAT STAYS COMPLETE ANYWAY: every motif feature and every named piece of equipment is present, full-size, in its assigned place and in its real colours — just crudely made. Rough means BADLY BUILT, never missing, never shrunk and never plain. The photograph itself stays sharp and beautifully composed; it is a meticulous photograph OF a rough prototype.
+UNFINISHED, NOT FAILED — but do not quietly upgrade it. A student who got ${K} right must not receive the costume of a student who got 4 right.`;
+}
 function leanQuality(n){
   const g = gearList();
   const nAce   = g.filter(x=>x.grade==='ace').length;
@@ -5427,6 +5455,8 @@ function buildLeanPrompt(b){
        그 경우에만 최소한의 엠블럼 규칙을 따로 넣는다. */
     leanMotif(b) ? '' : `THE CHEST: if this costume carries an emblem, it is a built three-dimensional object made from the costume's own materials — a sculpted relief of a real thing this hero is about. NOT a card suit (no spade, heart, diamond or club), NOT a star, lightning bolt, shield, hexagon or any abstract geometric badge, and NOT a letter, initial, monogram or name. If none of that can be built convincingly, leave the chest plain.`,
     leanGear(),
+    /* ★ 등급 상한선은 장비 바로 뒤에 둔다. 뒤쪽으로 밀릴수록 무시된다. */
+    leanCraftCap(n),
     b.picture ? `THE PICTURE: ${b.picture}` : '',
     leanShot(b, n),
     leanQuality(n),
@@ -5434,6 +5464,10 @@ function buildLeanPrompt(b){
     leanGender(n),
     leanMission(),
     leanGarment(b),
+    /* ★ 헬멧 규칙도 규칙집에만 있고 그림 프롬프트에는 없었다 — 안경과 똑같은 누락이었다.
+       그래서 모델은 늘 맨머리나 작은 크레스트로 갔다. 짧게 여기에 붙인다. */
+    `HEADGEAR — LET THE MOTIF DECIDE, AND DO NOT DEFAULT. If the motif has a head worth building — a crested bird, a horned or antlered animal, a shelled or armoured creature, a rider, a diver, a pilot, a machine — then BUILD THE HELMET, because that is where the motif reads best. If the motif lives in the body instead, a crown or back crest, a circlet, a brow band or a bare head is the better answer.
+${state.photo ? `WHENEVER A HELMET IS BUILT IT IS OPEN-FACED, WORN THE WAY A CAP IS WORN: on the crown and the back of the head, beginning behind the preserved hairline, with NO faceplate, NO chin bar, NO cheek guards, NO muzzle and nothing hinged down over the eyes. Everything from the eyebrows down is bare face. A closed helmet is the one thing never built here — the helmet is welcome, the faceplate is not.` : 'A helmet may be closed or open, but the mouth and jaw stay readable.'}`,
     `THE HEAD: ${b.head || ''}${state.photo ? (wearsGlasses()
       ? ` Headgear stays on the crown and back behind the preserved hairline. This hero wears the redesigned hero eyewear specified in the FACE section at the photographed eye position — a new frame designed for this costume, never the glasses from the photograph — with clear lenses and both eyes fully visible behind them. No mask, no full-face visor, no second optical object.`
       : ' Headgear stays on the crown and back behind the preserved hairline. The whole face, eyes and eyebrows are bare and lit, with no new glasses, goggles, visor, mask or optical object over them. Any photographed glasses or goggles already pushed into the hair or crown stay at their exact original shape and position and are never moved down.')
@@ -6066,48 +6100,69 @@ async function askImage(prompt){
   /* ① 전용 Image API — input_references 가 '편집할 사진'으로 전달되는 기본 경로다.
      모델마다 받는 파라미터가 달라서(예: GPT Image 는 resolution 을 안 받는다)
      많이 얹은 것부터 보내고 거절당하면 하나씩 덜어낸다. 실패한 생성은 요금이 붙지 않는다. */
+  /* ★★ 경로 순서는 '참조 사진이 있느냐' 가 정한다. 이걸 반대로 둔 대가가 컸다.
+     전용 Image API 는 모르는 필드를 받으면 조용히 무시하고도 200 과 함께 예쁜 그림을 돌려준다.
+     그러면 input_references 가 버려졌어도 '성공' 이라 폴백이 영영 안 돌고,
+     사진을 한 번도 보지 않고 글만 읽고 그린 낯선 사람이 포스터가 된다.
+     교실에서 '갑자기 모르는 사람이 나왔다' 가 이 모양이었다.
+     chat/completions 는 사진을 messages.content 안에 넣어 보내므로 무시될 여지가 없다.
+     따라서 사진이 있으면 chat 먼저, 없으면 전용 API 먼저. */
+  const chatFirst = refs.length > 0;
+
   const ladder = [
     { ...base, aspect_ratio:f.ar, resolution:'2K' },
     { ...base, aspect_ratio:f.ar, quality:'high' },
     { ...base, aspect_ratio:f.ar },
     base
   ];
-  let imgErr;
-  for(const p of ladder){
+  let imgErr, chatErr;
+
+  const tryImageApi = async () => {
+    for(const p of ladder){
+      try{
+        const d = await orFetch(p, 240000, OR_IMG_URL);
+        const it = d?.data?.[0];
+        if(it?.b64_json) return `data:${it.media_type || 'image/png'};base64,${it.b64_json}`;
+        if(it?.url) return it.url;
+        if(it?.image_url?.url) return it.image_url.url;
+        imgErr = imgErr || new Error('그림이 응답에 들어 있지 않았습니다.');
+      }catch(err){
+        imgErr = imgErr || err;               // ★ 첫 오류를 남긴다. 뒤엣것이 덮어쓰면 원인이 사라진다
+        if(err.status === 401 || err.status === 402) throw err;
+      }
+    }
+    return '';
+  };
+
+  /* chat/completions 경로 — 사진이 messages.content 안에 그대로 들어간다.
+     image_config 는 Gemini 전용이라 다른 모델에는 붙이지 않는다. */
+  const tryChat = async () => {
     try{
-      const d = await orFetch(p, 240000, OR_IMG_URL);
-      const it = d?.data?.[0];
-      if(it?.b64_json) return `data:${it.media_type || 'image/png'};base64,${it.b64_json}`;
-      if(it?.url) return it.url;
-      if(it?.image_url?.url) return it.image_url.url;
-      imgErr = imgErr || new Error('그림이 응답에 들어 있지 않았습니다.');
+      const d = await orFetch({
+        model: state.imageModel,
+        messages: [{ role:'user', content }],
+        modalities: ['image','text'],
+        ...(isGemini ? { image_config:{ aspect_ratio:f.ar, image_size:'2K' } } : {})
+      }, 240000);
+      const msg = d?.choices?.[0]?.message;
+      let url = msg?.images?.[0]?.image_url?.url || msg?.images?.[0]?.url || '';
+      if(!url && Array.isArray(msg?.content)){
+        const img = msg.content.find(p => p?.type==='image_url' || p?.type==='output_image');
+        url = img?.image_url?.url || img?.url || '';
+      }
+      if(url) return url;
+      chatErr = new Error('그림이 응답에 들어 있지 않았습니다.');
     }catch(err){
-      imgErr = imgErr || err;                 // ★ 첫 오류를 남긴다. 뒤엣것이 덮어쓰면 원인이 사라진다
+      chatErr = err;
       if(err.status === 401 || err.status === 402) throw err;
     }
-  }
+    return '';
+  };
 
-  /* ② chat/completions 폴백. 일부 제공자는 이미지 생성 모델을 이 경로로만 연다.
-     image_config 는 Gemini 전용이라 다른 모델에는 붙이지 않는다. */
-  let chatErr;
-  try{
-    const d = await orFetch({
-      model: state.imageModel,
-      messages: [{ role:'user', content }],
-      modalities: ['image','text'],
-      ...(isGemini ? { image_config:{ aspect_ratio:f.ar, image_size:'2K' } } : {})
-    }, 240000);
-    const msg = d?.choices?.[0]?.message;
-    let url = msg?.images?.[0]?.image_url?.url || msg?.images?.[0]?.url || '';
-    if(!url && Array.isArray(msg?.content)){
-      const img = msg.content.find(p => p?.type==='image_url' || p?.type==='output_image');
-      url = img?.image_url?.url || img?.url || '';
-    }
+  /* ★ 사진이 있으면 chat 먼저 — 위 주석 참고. 사진이 없으면 전용 API 먼저. */
+  for(const run of (chatFirst ? [tryChat, tryImageApi] : [tryImageApi, tryChat])){
+    const url = await run();
     if(url) return url;
-    chatErr = new Error('그림이 응답에 들어 있지 않았습니다.');
-  }catch(err){
-    chatErr = err;
-    if(err.status === 401 || err.status === 402) throw err;
   }
 
   /* ★ 두 경로의 오류를 모두 보여 준다. 예전에는 뒤엣것이 앞엣것을 덮어써서
